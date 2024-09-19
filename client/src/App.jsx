@@ -26,7 +26,7 @@ import AdminAdmin from './superadmin/Admin';
 import AdminUsers from './superadmin/Users';
 import AdminLogs from './superadmin/Logs';
 
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = 'https://nu-pals-web.vercel.app/';
 axios.defaults.withCredentials = true
 
 

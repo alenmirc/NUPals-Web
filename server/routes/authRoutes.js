@@ -12,7 +12,7 @@ const authenticate = require('../middleware/authenticate');
 router.use(
   cors({
   credentials: true,
-  origin: 'http://localhost:5173'
+  origin: 'https://nu-palsweb.vercel.app/'
 }));
 
 router.use(bodyParser.json({ limit: '50mb' }));
