@@ -1,0 +1,583 @@
+/* Ensure responsiveness for different resolutions */
+
+.contactBackground {
+  background-image: url('../assets/homecontact.png'); /* Adjust the path as needed */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.whiteBackground {
+  background-color: white;
+}
+
+.navbar {
+  --bs-navbar-padding-x: 0;
+  --bs-navbar-padding-y: 0.5rem;
+  --bs-navbar-color: rgba(0, 0, 0, 0.55);
+  --bs-navbar-hover-color: rgba(0, 0, 0, 0.7);
+  --bs-navbar-disabled-color: rgba(0, 0, 0, 0.3);
+  --bs-navbar-active-color: rgba(0, 0, 0, 0.9);
+  --bs-navbar-brand-padding-y: 0.3125rem;
+  --bs-navbar-brand-margin-end: 1rem;
+  --bs-navbar-brand-font-size: 1.25rem;
+  --bs-navbar-brand-color: rgba(0, 0, 0, 0.9);
+  --bs-navbar-brand-hover-color: rgba(0, 0, 0, 0.9);
+  --bs-navbar-nav-link-padding-x: 0.5rem;
+  --bs-navbar-toggler-padding-y: 0.25rem;
+  --bs-navbar-toggler-padding-x: 0.75rem;
+  --bs-navbar-toggler-font-size: 1.25rem;
+  --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  --bs-navbar-toggler-border-color: rgba(0, 0, 0, 0.1);
+  --bs-navbar-toggler-border-radius: 0.375rem;
+  --bs-navbar-toggler-focus-width: 0.25rem;
+  --bs-navbar-toggler-transition: box-shadow 0.15s ease-in-out;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--bs-navbar-padding-y) var(--bs-navbar-padding-x);
+}
+.navbarContainer {
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-between;
+}
+.navbarBrand {
+  padding-top: var(--bs-navbar-brand-padding-y);
+  padding-bottom: var(--bs-navbar-brand-padding-y);
+  margin-right: var(--bs-navbar-brand-margin-end);
+  font-size: var(--bs-navbar-brand-font-size);
+  color: var(--bs-navbar-brand-color);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.navbarBrandHover {
+  color: var(--bs-navbar-brand-hover-color);
+}
+.navbarNav {
+  --bs-nav-link-padding-x: 0;
+  --bs-nav-link-padding-y: 0.5rem;
+  --bs-nav-link-font-weight: ;
+  --bs-nav-link-color: var(--bs-navbar-color);
+  --bs-nav-link-hover-color: var(--bs-navbar-hover-color);
+  --bs-nav-link-disabled-color: var(--bs-navbar-disabled-color);
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.navbarNavShow {
+  color: var(--bs-navbar-active-color);
+}
+.navbarDropdownMenu {
+  position: static;
+}
+.navbarText {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: var(--bs-navbar-color);
+}
+.navbarTextLink {
+  color: var(--bs-navbar-active-color);
+}
+.navbarCollapse {
+  flex-basis: 100%;
+  flex-grow: 1;
+  align-items: center;
+}
+.navbarToggler {
+  padding: var(--bs-navbar-toggler-padding-y) var(--bs-navbar-toggler-padding-x);
+  font-size: var(--bs-navbar-toggler-font-size);
+  line-height: 1;
+  color: var(--bs-navbar-color);
+  background-color: transparent;
+  border: var(--bs-border-width) solid var(--bs-navbar-toggler-border-color);
+  border-radius: var(--bs-navbar-toggler-border-radius);
+  transition: var(--bs-navbar-toggler-transition);
+}
+.navbarTogglerReducedMotion {
+  transition: none;
+}
+.navbarTogglerHover {
+  text-decoration: none;
+}
+.navbarTogglerFocus {
+  text-decoration: none;
+  outline: 0;
+  box-shadow: 0 0 0 var(--bs-navbar-toggler-focus-width);
+}
+.navbarTogglerIcon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  background-image: var(--bs-navbar-toggler-icon-bg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+}
+.navbarNavScroll {
+  max-height: var(--bs-scroll-height, 75vh);
+  overflow-y: auto;
+}
+.navbarExpandSm {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.navbarExpandSmNav {
+  flex-direction: row;
+}
+.navbarExpandSmDropdownMenu {
+  position: absolute;
+}
+.navbarExpandSmNavLink {
+  padding-right: var(--bs-navbar-nav-link-padding-x);
+  padding-left: var(--bs-navbar-nav-link-padding-x);
+}
+.navbarExpandSmNavScroll {
+  overflow: visible;
+}
+.navbarExpandSmCollapse {
+  display: flex !important;
+  flex-basis: auto;
+}
+.navbarExpandSmToggler {
+  display: none;
+}
+.navbarExpandSmOffcanvas {
+  position: static;
+  z-index: auto;
+  flex-grow: 1;
+  width: auto !important;
+  height: auto !important;
+  visibility: visible !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  transform: none !important;
+  transition: none;
+}
+.navbarExpandSmOffcanvasHeader {
+  display: none;
+}
+.navbarExpandSmOffcanvasBody {
+  display: flex;
+  flex-grow: 0;
+  padding: 0;
+  overflow-y: visible;
+}
+.navbarExpandMd {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.navbarExpandMdNav {
+  flex-direction: row;
+}
+.navbarExpandMdDropdownMenu {
+  position: absolute;
+}
+.navbarExpandMdNavLink {
+  padding-right: var(--bs-navbar-nav-link-padding-x);
+  padding-left: var(--bs-navbar-nav-link-padding-x);
+}
+.navbarExpandMdNavScroll {
+  overflow: visible;
+}
+.navbarExpandMdCollapse {
+  display: flex !important;
+  flex-basis: auto;
+}
+.navbarExpandMdToggler {
+  display: none;
+}
+.navbarExpandMdOffcanvas {
+  position: static;
+  z-index: auto;
+  flex-grow: 1;
+  width: auto !important;
+  height: auto !important;
+  visibility: visible !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  transform: none !important;
+  transition: none;
+}
+.navbarExpandMdOffcanvasHeader {
+  display: none;
+}
+.navbarExpandMdOffcanvasBody {
+  display: flex;
+  flex-grow: 0;
+  padding: 0;
+  overflow-y: visible;
+}
+.navbarExpandLg {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.navbarExpandLgNav {
+  flex-direction: row;
+}
+.navbarExpandLgDropdownMenu {
+  position: absolute;
+}
+.navbarExpandLgNavLink {
+  padding-right: var(--bs-navbar-nav-link-padding-x);
+  padding-left: var(--bs-navbar-nav-link-padding-x);
+}
+.navbarExpandLgNavScroll {
+  overflow: visible;
+}
+.navbarExpandLgCollapse {
+  display: flex !important;
+  flex-basis: auto;
+}
+.navbarExpandLgToggler {
+  display: none;
+}
+.navbarExpandLgOffcanvas {
+  position: static;
+  z-index: auto;
+  flex-grow: 1;
+  width: auto !important;
+  height: auto !important;
+  visibility: visible !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  transform: none !important;
+  transition: none;
+}
+.navbarExpandLgOffcanvasHeader {
+  display: none;
+}
+.navbarExpandLgOffcanvasBody {
+  display: flex;
+  flex-grow: 0;
+  padding: 0;
+  overflow-y: visible;
+}
+.navbarExpandXl {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.navbarExpandXlNav {
+  flex-direction: row;
+}
+.navbarExpandXlDropdownMenu {
+  position: absolute;
+}
+.navbarExpandXlNavLink {
+  padding-right: var(--bs-navbar-nav-link-padding-x);
+  padding-left: var(--bs-navbar-nav-link-padding-x);
+}
+.navbarExpandXlNavScroll {
+  overflow: visible;
+}
+.navbarExpandXlCollapse {
+  display: flex !important;
+  flex-basis: auto;
+}
+.navbarExpandXlToggler {
+  display: none;
+}
+.navbarExpandXlOffcanvas {
+  position: static;
+  z-index: auto;
+  flex-grow: 1;
+  width: auto !important;
+  height: auto !important;
+  visibility: visible !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  transform: none !important;
+  transition: none;
+}
+.navbarExpandXlOffcanvasHeader {
+  display: none;
+}
+.navbarExpandXlOffcanvasBody {
+  display: flex;
+  flex-grow: 0;
+  padding: 0;
+  overflow-y: visible;
+}
+.navbarExpandXxl {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.navbarExpandXxlNav {
+  flex-direction: row;
+}
+.navbarExpandXxlDropdownMenu {
+  position: absolute;
+}
+.navbarExpandXxlNavLink {
+  padding-right: var(--bs-navbar-nav-link-padding-x);
+  padding-left: var(--bs-navbar-nav-link-padding-x);
+}
+.navbarExpandXxlNavScroll {
+  overflow: visible;
+}
+.navbarExpandXxlCollapse {
+  display: flex !important;
+  flex-basis: auto;
+}
+.navbarExpandXxlToggler {
+  display: none;
+}
+.navbarExpandXxlOffcanvas {
+  position: static;
+  z-index: auto;
+  flex-grow: 1;
+  width: auto !important;
+  height: auto !important;
+  visibility: visible !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  transform: none !important;
+  transition: none;
+}
+.navbarExpandXxlOffcanvasHeader {
+  display: none;
+}
+.navbarExpandXxlOffcanvasBody {
+  display: flex;
+  flex-grow: 0;
+  padding: 0;
+  overflow-y: visible;
+}
+.navbarDark {
+  --bs-navbar-color: rgba(255, 255, 255, 0.55);
+  --bs-navbar-hover-color: rgba(255, 255, 255, 0.75);
+  --bs-navbar-disabled-color: rgba(255, 255, 255, 0.25);
+  --bs-navbar-active-color: #fff;
+  --bs-navbar-brand-color: #fff;
+  --bs-navbar-brand-hover-color: #fff;
+  --bs-navbar-toggler-border-color: rgba(255, 255, 255, 0.1);
+  --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+
+.pageSection {
+  padding: 6rem 0;
+}
+
+.pageSection h2.sectionHeading,
+.pageSection .sectionHeading.h2 {
+  font-size: 2.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.pageSection h3.sectionSubheading,
+.pageSection .sectionSubheading.h3 {
+  font-size: 1rem;
+  font-weight: 400;
+  font-style: italic;
+  font-family: "Roboto Slab", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin-bottom: 4rem;
+}
+
+@media (min-width: 768px) {
+  .pageSection {
+    padding: 9rem 0;
+  }
+  .pageSection h2.sectionHeading,
+  .pageSection .sectionHeading.h2 {
+    font-size: 3rem;
+  }
+  .pageSection h3.sectionSubheading,
+  .pageSection .sectionSubheading.h3 {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .pageSection {
+    padding: 12rem 0;
+  }
+  .pageSection h2.sectionHeading,
+  .pageSection .sectionHeading.h2 {
+    font-size: 3.5rem;
+  }
+  .pageSection h3.sectionSubheading,
+  .pageSection .sectionSubheading.h3 {
+    font-size: 1.25rem;
+  }
+}
+
+.btnXl {
+  padding: 1.25rem 2.5rem;
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.btnSocial {
+  height: 2.5rem;
+  width: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 100%;
+}
+
+.mainNav {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-color: #212529;
+}
+
+.mainNav .navbarToggler {
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.mainNav .navbarBrand {
+  color: #ffc800;
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.0625em;
+  text-transform: uppercase;
+}
+
+.mainNav .navbarBrand img {
+  height: 1.5rem;
+}
+
+.mainNav .navbarNav .navItem .navLink {
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.95rem;
+  color: #fff;
+  letter-spacing: 0.0625em;
+}
+
+.mainNav .navbarNav .navItem .navLink.active,
+.mainNav .navbarNav .navItem .navLink:hover {
+  color: #ffc800;
+}
+
+@media (min-width: 992px) {
+  .mainNav {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    border: none;
+    background-color: transparent;
+    transition: padding-top 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
+  }
+  .mainNav .navbarBrand {
+    font-size: 1.5em;
+    transition: font-size 0.3s ease-in-out;
+  }
+  .mainNav .navbarBrand img {
+    height: 2rem;
+    transition: height 0.3s ease-in-out;
+  }
+  .mainNav.navbarShrink {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: #212529;
+  }
+  .mainNav.navbarShrink .navbarBrand {
+    font-size: 1.25em;
+  }
+  .mainNav.navbarShrink .navbarBrand svg,
+  .mainNav.navbarShrink .navbarBrand img {
+    height: 1.5rem;
+  }
+  .mainNav .navbarNav .navItem {
+    margin-right: 1rem;
+  }
+  .mainNav .navbarNav .navItem:last-child {
+    margin-right: 0;
+  }
+}
+
+.headerMasthead {
+  padding-top: 10.5rem;
+  padding-bottom: 6rem;
+  text-align: center;
+  color: #fff;
+  background-image: url("../assets/homebg.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.headerMasthead .mastheadSubheading {
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.5rem;
+  margin-bottom: 25px;
+  font-family: "Roboto Slab", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.headerMasthead .mastheadHeading {
+  font-size: 3.25rem;
+  font-weight: 700;
+  line-height: 3.25rem;
+  margin-bottom: 2rem;
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (min-width: 768px) {
+  .headerMasthead {
+    padding-top: 17rem;
+    padding-bottom: 12.5rem;
+  }
+  .headerMasthead .mastheadSubheading {
+    font-size: 2.25rem;
+    line-height: 2.25rem;
+    margin-bottom: 2rem;
+  }
+  .headerMasthead .mastheadHeading {
+    font-size: 4.5rem;
+    line-height: 4.5rem;
+    margin-bottom: 4rem;
+  }
+}
+
+.team-member {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.team-member img {
+  width: 14rem;
+  height: 14rem;
+  border: 0.5rem solid rgba(0, 0, 0, 0.1);
+}
+
+.team-member h4, .team-member .h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+}
+
+footer {
+  background-color: #212529;
+  color: #fff;
+  padding: 1rem 0;
+}
+
+.footer .btnSocial {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
