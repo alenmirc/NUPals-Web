@@ -27,9 +27,9 @@ export default function Login() {
         } else {
           setData({});
           if (data.role === 'superadmin') {
-            window.location.href = '/super/dashboard';
+            navigate('/super/dashboard');
           } else if (data.role === 'admin') {
-            window.location.href = '/dashboard';
+            navigate('/dashboard');
           } else {
             toast.error('User role is not recognized.');
           }

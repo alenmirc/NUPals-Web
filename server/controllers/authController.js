@@ -74,7 +74,7 @@ const registerUser = async (req, res) => {
   };
 
   
-
+//LOGIN DITO
 const loginUser = async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -107,12 +107,18 @@ const loginUser = async (req, res) => {
       jwt.sign(
         { email: user.email, id: user._id, firstName: user.firstName, lastName: user.lastName, roles: user.roles },
         process.env.JWT_SECRET,
+        { expiresIn: '1h' },
         {},
         async (err, token) => {
           if (err) throw err;
   
-          // Set token in cookie
-          res.cookie('token', token);
+         // Set token in cookie with attributes
+         res.cookie('token', token, {
+          httpOnly: true,
+          secure: true, // Use HTTPS
+          sameSite: 'None',
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
   
           // Log successful login
           await Log.create({
