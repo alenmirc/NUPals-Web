@@ -166,16 +166,20 @@ const loginUser = async (req, res) => {
 //GET PROFILE
 
 const getProfile = (req, res) => {
-    const {token} = req.cookies
-    if(token) {
-        jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
-            if(err) throw err;
-            res.json(user)
-        })
-    } else {
-        res.json(null)
-    }
-}
+  const { token } = req.cookies;
+  if (token) {
+      jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
+          if (err) {
+              console.error('JWT verification error:', err);
+              return res.status(401).json({ error: 'Unauthorized' });
+          }
+          res.json(user);
+      });
+  } else {
+      console.log('No token provided');
+      res.status(401).json(null); // Return null explicitly for clarity
+  }
+};
 
 
 // Update profile function
