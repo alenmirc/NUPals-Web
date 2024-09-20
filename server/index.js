@@ -5,6 +5,11 @@
     const cookieParser = require('cookie-parser')
     const app = express();
 
+// Apply CORS middleware globally, using CLIENT_URL from .env
+app.use(cors({
+  credentials: true,
+  origin: process.env.CORS_ORIGIN
+}));
 
     mongoose.connect(process.env.MONGO_URL, {
       })

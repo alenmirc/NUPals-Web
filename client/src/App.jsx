@@ -27,7 +27,7 @@ import AdminAdmin from './superadmin/Admin';
 import AdminUsers from './superadmin/Users';
 import AdminLogs from './superadmin/Logs';
 
-axios.defaults.baseURL = 'https://nupals-web.onrender.com/';
+axios.defaults.baseURL = 'https://nupals-web.onrender.com';
 axios.defaults.withCredentials = true
 
 
