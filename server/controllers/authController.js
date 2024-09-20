@@ -76,75 +76,79 @@ const registerUser = async (req, res) => {
   
 //LOGIN DITO
 const loginUser = async (req, res) => {
-    try {
+  try {
       const { email, password } = req.body;
-  
+
       // CHECK IF USER EXISTS
       const user = await User.findOne({ email });
       if (!user) {
-        await Log.create({
-          level: 'warn',
-          message: 'Failed login attempt - no user found',
-          adminId: null, // No user ID since user was not found
-          adminName: email, // Log the email used for login attempt
-        });
-        return res.json({ error: 'No user Found' });
+          await Log.create({
+              level: 'warn',
+              message: 'Failed login attempt - no user found',
+              adminId: null,
+              adminName: email,
+          });
+          return res.json({ error: 'No user found' });
       }
-  
+
       // CHECK IF PASSWORD MATCHES
       const match = await comparePassword(password, user.password);
       if (!match) {
-        await Log.create({
-          level: 'warn',
-          message: 'Failed login attempt - password mismatch',
-          adminId: user._id, // Log the user's ID
-          adminName: user.email, // Log the email
-        });
-        return res.json({ error: 'Password does not match' });
+          await Log.create({
+              level: 'warn',
+              message: 'Failed login attempt - password mismatch',
+              adminId: user._id,
+              adminName: user.email,
+          });
+          return res.json({ error: 'Password does not match' });
       }
-  
+
       // GENERATE JWT TOKEN
       jwt.sign(
-        { email: user.email, id: user._id, firstName: user.firstName, lastName: user.lastName, roles: user.roles },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' },
-        {},
-        async (err, token) => {
-          if (err) throw err;
-  
-         // Set token in cookie with attributes
-         res.cookie('token', token, {
-          httpOnly: true,
-          secure: true, // Use HTTPS
-          sameSite: 'None',
-          maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
-  
-          // Log successful login
-          await Log.create({
-            level: 'info',
-            message: 'User logged in',
-            adminId: user._id, // Log the user's ID
-            adminName: user.email, // Log the email
-          });
-  
-          // Respond with user data and role
-          res.json({
-            ...user.toObject(),
-            role: user.roles.includes('superadmin') ? 'superadmin' : 'admin',
-          });
-        }
+          { email: user.email, id: user._id, firstName: user.firstName, lastName: user.lastName, roles: user.roles },
+          process.env.JWT_SECRET,
+          { expiresIn: '1h' },
+          async (err, token) => {
+              if (err) {
+                  console.error('Token generation error:', err);
+                  return res.status(500).json({ error: 'Token generation failed' });
+              }
+
+              // Set token in cookie with attributes
+              res.cookie('token', token, {
+                  httpOnly: true,
+                  secure: true, // Ensure you're using HTTPS in production
+                  sameSite: 'None',
+                  maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+              });
+
+              // Log successful login
+              await Log.create({
+                  level: 'info',
+                  message: 'User logged in',
+                  adminId: user._id,
+                  adminName: user.email,
+              });
+
+              // Respond with user data and role
+              res.json({
+                  ...user.toObject(),
+                  role: user.roles.includes('superadmin') ? 'superadmin' : 'admin',
+              });
+          }
       );
-    } catch (error) {
+  } catch (error) {
+      console.error('Internal server error during login:', error);
       await Log.create({
-        level: 'error',
-        message: 'Internal server error during login',
-        adminId: null, // No specific admin ID for system errors
-        adminName: 'unknown', // Log as 'unknown' since the error may not be tied to a specific user
+          level: 'error',
+          message: 'Internal server error during login',
+          adminId: null,
+          adminName: 'unknown',
       });
       res.status(500).json({ error: 'Internal server error' });
-    }
-  };
+  }
+};
+
   
 
   
