@@ -27,8 +27,12 @@ import AdminAdmin from './superadmin/Admin';
 import AdminUsers from './superadmin/Users';
 import AdminLogs from './superadmin/Logs';
 
+//"value": "default-src 'self' https://nupals-server.vercel.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' https://nupals-server.vercel.app; connect-src 'self' https://nupals-server.vercel.app;"
+//"value": "default-src 'self' https://nupals-web.onrender.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' https://nupals-web.onrender.com; connect-src 'self' https://nupals-web.onrender.com;"
+
 //axios.defaults.baseURL = 'http://localhost:8000';
-axios.defaults.baseURL = 'https://nupals-server.vercel.app';
+axios.defaults.baseURL = 'https://nupals-web.onrender.com';
+//axios.defaults.baseURL = 'https://nupals-server.vercel.app';
 axios.defaults.withCredentials = true
 
 
