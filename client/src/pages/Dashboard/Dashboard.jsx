@@ -10,8 +10,6 @@ import {toast} from 'react-hot-toast'
 
 const App = () => {
   const [profileDropdownVisible, setProfileDropdownVisible] = useState(false);
-  const [menuVisible, setMenuVisible] = useState({});
-
   const sidebarRef = useRef(null);
   const profileRef = useRef(null);
 
@@ -104,12 +102,7 @@ const App = () => {
     setProfileDropdownVisible(prev => !prev);
   };
 
-  const handleMenuClick = (index) => {
-    setMenuVisible(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
-  };
+
 
   const [userData, setUserData] = useState(null);
   const [firstName, setFirstName] = useState('');
