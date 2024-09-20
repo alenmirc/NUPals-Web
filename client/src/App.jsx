@@ -10,6 +10,7 @@ import PublicRoute from '../context/PublicRoute';
 import AdminPrivateRoute from '../context/AdminPrivateRoute';
 
 import Notfound from './pages/404Notfound/404';
+import NotAuthorized from './pages/404Notfound/NotAuthorized';
 import Test from './pages/Dashboard/test';
 import Template from './pages/Dashboard/template';
 
@@ -38,6 +39,7 @@ function App() {
       <Toaster position='bottom-right' toastOptions={{ duration: 2000 }} />
       <Routes>
       <Route path='*' element={<Notfound />} />
+      <Route path='/not-authorized' element={<NotAuthorized />} />
       <Route path='/test' element={<Test />}/>
 
       <Route path='/' element={<Home />} />
