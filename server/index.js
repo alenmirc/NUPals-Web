@@ -12,7 +12,7 @@ const app = express();
 // Apply CORS middleware globally, using CLIENT_URL from .env
 app.use(cors({
   credentials: true,
-  origin: process.env.CORS_ORIGIN // Make sure you set this in your .env file
+  origin: [process.env.CORS_ORIGIN, 'http://localhost:5173'] // Make sure you set this in your .env file
 }));
 
 // Connect to MongoDB

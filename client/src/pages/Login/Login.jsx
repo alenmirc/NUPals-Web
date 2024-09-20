@@ -7,6 +7,7 @@ import {RiLockPasswordLine} from "react-icons/ri"
 import styles from './Login.module.css';
 import Logo from '../../assets/logo.png';
 
+
 export default function Login() {
   const navigate = useNavigate()
   const [data, setData] = useState({
@@ -27,9 +28,9 @@ export default function Login() {
         } else {
           setData({});
           if (data.role === 'superadmin') {
-            navigate('/super/dashboard');
+            window.location.href = '/super/dashboard';
           } else if (data.role === 'admin') {
-            navigate('/dashboard');
+            window.location.href = '/dashboard';
           } else {
             toast.error('User role is not recognized.');
           }

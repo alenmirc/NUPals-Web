@@ -27,6 +27,7 @@ import AdminAdmin from './superadmin/Admin';
 import AdminUsers from './superadmin/Users';
 import AdminLogs from './superadmin/Logs';
 
+//axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.baseURL = 'https://nupals-web.onrender.com';
 axios.defaults.withCredentials = true
 
@@ -48,8 +49,8 @@ function App() {
       <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>}/>
       <Route path='/users' element={<PrivateRoute><Users /></PrivateRoute>}/>
       <Route path='/post' element={<PrivateRoute><Post /></PrivateRoute>}/>
-      <Route path='/profile' element={<Profile />}/>
-      <Route path='/template' element={<Template />}/>
+      <Route path='/profile' element={<PrivateRoute><Profile /></PrivateRoute>}/>
+      <Route path='/template' element={<PrivateRoute><Template /></PrivateRoute>}/>
       
       <Route path='/super/dashboard' element={<AdminPrivateRoute><AdminDashboard /></AdminPrivateRoute>} />
       <Route path='/super/admin' element={<AdminPrivateRoute><AdminAdmin /></AdminPrivateRoute>} />

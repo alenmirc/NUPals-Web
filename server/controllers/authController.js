@@ -2,7 +2,6 @@ const User = require('../models/user');
 const { hashPassword, comparePassword} = require('../helpers/auth')
 const jwt = require('jsonwebtoken');
 const Log = require('../models/log');
-
 const test = (req, res) => {
     res.json('test is working');
 };
@@ -74,80 +73,71 @@ const registerUser = async (req, res) => {
   };
 
   
-//LOGIN DITO
+
+//LOGIN
 const loginUser = async (req, res) => {
   try {
-      const { email, password } = req.body;
+    const { email, password } = req.body;
 
-      // CHECK IF USER EXISTS
-      const user = await User.findOne({ email });
-      if (!user) {
-          await Log.create({
-              level: 'warn',
-              message: 'Failed login attempt - no user found',
-              adminId: null,
-              adminName: email,
-          });
-          return res.json({ error: 'No user found' });
-      }
-
-      // CHECK IF PASSWORD MATCHES
-      const match = await comparePassword(password, user.password);
-      if (!match) {
-          await Log.create({
-              level: 'warn',
-              message: 'Failed login attempt - password mismatch',
-              adminId: user._id,
-              adminName: user.email,
-          });
-          return res.json({ error: 'Password does not match' });
-      }
-
-      // GENERATE JWT TOKEN
-      jwt.sign(
-          { email: user.email, id: user._id, firstName: user.firstName, lastName: user.lastName, roles: user.roles },
-          process.env.JWT_SECRET,
-          { expiresIn: '1h' },
-          async (err, token) => {
-              if (err) {
-                  console.error('Token generation error:', err);
-                  return res.status(500).json({ error: 'Token generation failed' });
-              }
-
-              // Set token in cookie with attributes
-              res.cookie('token', token, {
-                  httpOnly: true,
-                  secure: true, // Ensure you're using HTTPS in production
-                  sameSite: 'None',
-                  maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-              });
-
-              // Log successful login
-              await Log.create({
-                  level: 'info',
-                  message: 'User logged in',
-                  adminId: user._id,
-                  adminName: user.email,
-              });
-
-              // Respond with user data and role
-              res.json({
-                  ...user.toObject(),
-                  role: user.roles.includes('superadmin') ? 'superadmin' : 'admin',
-              });
-          }
-      );
-  } catch (error) {
-      console.error('Internal server error during login:', error);
+    // CHECK IF USER EXISTS
+    const user = await User.findOne({ email });
+    if (!user) {
       await Log.create({
-          level: 'error',
-          message: 'Internal server error during login',
-          adminId: null,
-          adminName: 'unknown',
+        level: 'warn',
+        message: 'Failed login attempt - no user found',
+        adminId: null, // No user ID since user was not found
+        adminName: email, // Log the email used for login attempt
       });
-      res.status(500).json({ error: 'Internal server error' });
+      return res.json({ error: 'No user Found' });
+    }
+
+    // CHECK IF PASSWORD MATCHES
+    const match = await comparePassword(password, user.password);
+    if (!match) {
+      await Log.create({
+        level: 'warn',
+        message: 'Failed login attempt - password mismatch',
+        adminId: user._id, // Log the user's ID
+        adminName: user.email, // Log the email
+      });
+      return res.json({ error: 'Password does not match' });
+    }
+
+    // GENERATE JWT TOKEN
+    jwt.sign(
+      { email: user.email, id: user._id, firstName: user.firstName, lastName: user.lastName, roles: user.roles },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' },
+      (err, token) => {
+        if (err) {
+          console.error('JWT sign error:', err);
+          return res.status(500).json({ error: 'Token generation failed' });
+        }
+        res.cookie('token', token, {
+          httpOnly: true, // This should typically remain true for security
+          secure: false, // Set to false during development; use true in production when using HTTPS
+          sameSite: 'None', // Allows cross-origin requests, which is often needed in development
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      });
+
+        // Respond with user data and role
+        res.json({
+          ...user.toObject(),
+          role: user.roles.includes('superadmin') ? 'superadmin' : 'admin',
+        });
+      }
+    );
+  } catch (error) {
+    await Log.create({
+      level: 'error',
+      message: 'Internal server error during login',
+      adminId: null, // No specific admin ID for system errors
+      adminName: 'unknown', // Log as 'unknown' since the error may not be tied to a specific user
+    });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
   
 

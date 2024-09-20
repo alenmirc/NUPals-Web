@@ -10,6 +10,8 @@ const AdminPrivateRoute = ({ children }) => {
     return <div>Loading...</div>;
   }
 
+  console.log('User state:', user); // Check the user state
+  
   if (!user) {
     // If no user is found, redirect to login
     return <Navigate to="/login" />;
