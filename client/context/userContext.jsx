@@ -10,16 +10,19 @@ export function UserContextProvider({children}) {
     useEffect(() => {
         axios.get('/profile', { withCredentials: true })
             .then(({ data }) => {
-                setUser(data);
+                if (data) {
+                    setUser(data); // Set the user if data is not null
+                } else {
+                    setUser(null); // Ensure user is null if no data is returned
+                }
             })
             .catch((error) => {
                 console.error("Error fetching profile data:", error);
             })
             .finally(() => {
-                setLoading(false); // Set loading to false when request completes
+                setLoading(false); // Set loading to false once the request completes
             });
     }, []);
-
     const logout = () => {
         axios.post('/logout').then(() => {
             setUser(null);
