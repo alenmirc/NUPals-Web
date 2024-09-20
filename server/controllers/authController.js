@@ -143,45 +143,31 @@ const loginUser = async (req, res) => {
 
   
   // LOGOUT ENDPOINT
-  const logoutUser = async (req, res) => {
-    try {
-        const user = req.user;  // This assumes you have a middleware setting req.user
-
-        await Log.create({
-            level: 'info',
-            message: 'User logged out',
-            adminId: user ? user._id : null,  // Use the user's ID if available
-            adminName: user ? user.email : null  // Use the user's email if available
-        });
-
-        // Clear the token cookie
-        res.cookie('token', '', { maxAge: 1 }).json('Logged out');
-    } catch (error) {
-        console.error('Logout error:', error);
-        res.status(500).json({ error: 'Failed to log out' });
-    }
-};
-
+  const logoutUser = (req, res) => {
+    res.cookie('token', '', { 
+        maxAge: 1, 
+        httpOnly: true,  // Same as when the token was set
+        secure: true,    // Ensure this matches (for HTTPS)
+        sameSite: 'None', // Match sameSite policy
+        path: '/'        // Ensure the path is correct
+    });
+    res.json('Logged out');
+  };
+  
 
 //GET PROFILE
 
 const getProfile = (req, res) => {
-  const { token } = req.cookies;
-  
-  if (!token) {
-      console.log('No token provided');
-      return res.status(200).json(null); // Return null with 200 status if no token
+  const {token} = req.cookies
+  if(token) {
+      jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
+          if(err) throw err;
+          res.json(user)
+      })
+  } else {
+      res.json(null)
   }
-
-  jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
-      if (err) {
-          console.error('JWT verification error:', err);
-          return res.status(401).json({ error: 'Unauthorized' });
-      }
-      res.json(user); // Return the user data if token is valid
-  });
-};
-
+}
 // Update profile function
 const updateProfile = async (req, res) => {
     const { userId, firstName, lastName, department, skills, profilePicture } = req.body;
