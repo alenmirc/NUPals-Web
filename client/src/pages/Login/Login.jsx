@@ -7,9 +7,7 @@ import {RiLockPasswordLine} from "react-icons/ri"
 import styles from './Login.module.css';
 import Logo from '../../assets/logo.png';
 
-
 export default function Login() {
-  const navigate = useNavigate()
   const [data, setData] = useState({
       email: "",
       password: "",
