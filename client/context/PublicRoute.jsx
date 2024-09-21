@@ -7,7 +7,10 @@ const PublicRoute = ({ children }) => {
 
   if (loading) {
     // Show a loading spinner or placeholder while waiting for user data
-    return <div>Loading...</div>;
+    return <div className="loader-container">
+    <div className="loader"></div>
+  </div>
+  
   }
 
   if (user) {

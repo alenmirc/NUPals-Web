@@ -45,7 +45,7 @@ const getUsers = async (req, res) => {
 const getAllpost = async (req, res) => {
     try {
         // Fetch all posts from the database
-        const posts = await Posts.find().populate('userId', 'firstName lastName'); // Populate userId with first and last names
+        const posts = await Posts.find().populate('userId', 'firstName lastName email'); // Populate userId with first and last names
 
         // Return the fetched posts as a response
         res.json(posts);
@@ -55,6 +55,30 @@ const getAllpost = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+//EDIT POST
+
+const editPost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const { content } = req.body; // Destructure content from req.body
+
+        // If there is a media file uploaded, use it
+        const media = req.file ? req.file.buffer.toString('base64') : req.body.media; // Convert buffer to base64 if needed
+
+        const updatedPost = await Posts.findByIdAndUpdate(postId, { content, media }, { new: true });
+        if (!updatedPost) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+        res.status(200).json(updatedPost);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Error editing post', error });
+    }
+};
+
+
+
 
 // DELETEPOST
 const adminDeletepost = async (req, res) => {
@@ -76,16 +100,16 @@ const adminDeletepost = async (req, res) => {
   };
 
 
-  // Update a user
-const updateUser = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true });
-        res.status(200).json(updatedUser);
-    } catch (error) {
-        res.status(500).json({ message: 'Error updating user', error });
-    }
-};
+    // Update a user
+    const updateUser = async (req, res) => {
+        try {
+            const { id } = req.params;
+            const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+            res.status(200).json(updatedUser);
+        } catch (error) {
+            res.status(500).json({ message: 'Error updating user', error });
+        }
+    };
 
 // Delete a user
 const deleteUser = async (req, res) => {
@@ -101,7 +125,16 @@ const deleteUser = async (req, res) => {
 // Create a new user
 const createUser = async (req, res) => {
     try {
-        const newUser = new User(req.body);
+        // Hash the password from the request body
+        const hashedPassword = await hashPassword(req.body.password);
+        console.log('Received password:', req.body.password);
+
+        // Create a new user with the hashed password
+        const newUser = new User({
+            ...req.body,
+            password: hashedPassword // Use the hashed password instead
+        });
+
         await newUser.save();
         res.status(201).json(newUser);
     } catch (error) {
@@ -113,6 +146,7 @@ module.exports = {
     getUsers,
     getAllpost,
     getLogs,
+    editPost,
     adminDeletepost,
     updateUser,
     deleteUser,

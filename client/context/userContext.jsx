@@ -35,8 +35,8 @@ export function UserContextProvider({ children }) {
         });
     };
 
-    const isAdmin = user && user.roles.includes('admin');
-    const isSuperadmin = user && user.roles.includes('superadmin');
+    const isAdmin = user && user.role === 'admin';
+    const isSuperadmin = user && user.role === 'superadmin';
 
     return (
         <UserContext.Provider value={{ user, setUser, logout, loading, isAdmin, isSuperadmin }}>

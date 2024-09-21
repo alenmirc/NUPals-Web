@@ -88,8 +88,29 @@ li {
 
 
 
+/* TABLE, SEARCH, BUTTON */
+.search-input {
+	width: 100%; /* Default to full width */
+  }
+  
+  @media (min-width: 576px) {
+	.search-input {
+	  width: 300px; /* Width for small screens and up */
+	}
+  }
+  
+  @media (min-width: 768px) {
+	.search-input {
+	  width: 400px; /* Width for medium screens and up */
+	}
+  }
+  .table-delete-button {
+	background-color: #f5222d !important; /* Ant Design danger color */
+	border-color: #f5222d !important;
+	color: white;
+  }
 
-
+/* END TABLE SEARCH BUTTON */
 
 
 /* SIDEBAR */

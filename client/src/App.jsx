@@ -26,13 +26,12 @@ import AdminDashboard from './superadmin/Dashboard';
 import AdminAdmin from './superadmin/Admin';
 import AdminUsers from './superadmin/Users';
 import AdminLogs from './superadmin/Logs';
+import AdminPost from './superadmin/Post';
 
-//"value": "default-src 'self' https://nupals-server.vercel.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' https://nupals-server.vercel.app; connect-src 'self' https://nupals-server.vercel.app;"
-//"value": "default-src 'self' https://nupals-web.onrender.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' https://nupals-web.onrender.com; connect-src 'self' https://nupals-web.onrender.com;"
 
 //axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.baseURL = 'https://nupals-web.onrender.com';
-//axios.defaults.baseURL = 'https://nupals-server.vercel.app';
+//axios.defaults.baseURL = 'https://nupals-server.vercel.app'; 
 axios.defaults.withCredentials = true
 
 
@@ -60,6 +59,7 @@ function App() {
       <Route path='/super/admin' element={<AdminPrivateRoute><AdminAdmin /></AdminPrivateRoute>} />
       <Route path='/super/users' element={<AdminPrivateRoute><AdminUsers /></AdminPrivateRoute>} />
       <Route path='/super/logs' element={<AdminPrivateRoute><AdminLogs /></AdminPrivateRoute>} />
+      <Route path='/super/post' element={<AdminPrivateRoute><AdminPost /></AdminPrivateRoute>} />
 
       </Routes>
       </UserContextProvider>

@@ -325,30 +325,29 @@ useEffect(() => {
               </tr>
             </thead>
             <tbody>
-              {paginatedPosts.map(post => (
-                
-                <tr key={post._id}>
-        
-                  <td>{post.userId.firstName}</td>
-                  <td>{post.userId.lastName}</td>
-                  <td>{post.content}</td>
-                  <td>
-                    {post.media && (
-                      <img src={post.media} alt="Media" style={{ width: '50px', height: '50px' }} />
-                    )}
-                  </td>
-                  <td>{new Date(post.createdAt).toLocaleString()}</td>
-                  <td>{new Date(post.updatedAt).toLocaleString()}</td>
-                  <td>
-                    <Button variant="primary" size="sm">Edit</Button>
-                    <Button variant="danger" size="sm" className="ml-2" onClick={() => {
-                      setShowDeleteModal(true);
-                      setPostIdToDelete(post._id);
-                    }}>Delete</Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {paginatedPosts.map(post => (
+    <tr key={post._id}>
+      <td>{post.userId ? post.userId.firstName : 'N/A'}</td> {/* Check if userId exists */}
+      <td>{post.userId ? post.userId.lastName : 'N/A'}</td>
+      <td>{post.content}</td>
+      <td>
+        {post.media && (
+          <img src={post.media} alt="Media" style={{ width: '50px', height: '50px' }} />
+        )}
+      </td>
+      <td>{new Date(post.createdAt).toLocaleString()}</td>
+      <td>{new Date(post.updatedAt).toLocaleString()}</td>
+      <td>
+        <Button variant="primary" size="sm">Edit</Button>
+        <Button variant="danger" size="sm" className="ml-2" onClick={() => {
+          setShowDeleteModal(true);
+          setPostIdToDelete(post._id);
+        }}>Delete</Button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </Table>
           
           <div className="d-flex justify-content-between">

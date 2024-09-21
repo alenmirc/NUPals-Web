@@ -15,4 +15,35 @@ body{
     width: 100vw;
 }
 
+/* LOADER SPINNER DITO */
 
+
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: transparent; /* Ensure no background color */
+  }
+
+  .loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid;
+    border-color: #181379 transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  } 
+
+/* END LOADER SPINNER DITO */

@@ -7,7 +7,10 @@ const PrivateRoute = ({ children }) => {
 
   if (loading) {
     // You can customize this part to show a loading spinner or a placeholder
-    return <div>Loading...</div>;
+    return <div className="loader-container">
+    <div className="loader"></div>
+  </div>
+  
   }
 
   if (!user) {

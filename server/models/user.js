@@ -9,7 +9,7 @@ const userSchema = new Schema({
         unique: true
     },
     password: String,
-    roles: [String],
+    role: String,
     profilePicture:  {
         type: String, // Update media type to String
         required: false,

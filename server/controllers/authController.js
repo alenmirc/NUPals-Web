@@ -1,15 +1,15 @@
 const User = require('../models/user');
-const { hashPassword, comparePassword} = require('../helpers/auth')
+const { hashPassword, comparePassword } = require('../helpers/auth')
 const jwt = require('jsonwebtoken');
 const Log = require('../models/log');
 const test = (req, res) => {
     res.json('test is working');
 };
 
-// REGISTER ENDPOINT DITO
+// REGISTER ENDPOINT DITO (NEW USER CREATE BY SUPERADMIN)
 const registerUser = async (req, res) => {
     try {
-      const { firstName, lastName, email, password } = req.body;
+      const { firstName, lastName, email, password, confirmPassword } = req.body;
   
       // CHECK IF FIRST NAME IS PROVIDED
       if (!firstName) {
@@ -26,6 +26,9 @@ const registerUser = async (req, res) => {
         return res.json({ error: 'Password is required and should be 6 characters long' });
       }
   
+      if (password !== confirmPassword) {
+        return res.json({ error: 'Passwords do not match' });
+    }
       // CHECK IF EMAIL ALREADY EXISTS
       const exist = await User.findOne({ email });
       if (exist) {
@@ -47,13 +50,13 @@ const registerUser = async (req, res) => {
         lastName,
         email,
         password: hashedPassword,
-        roles: ['admin'], // Default role is 'admin'
+        role: 'admin', // Default role is 'admin'
       });
   
       // LOG SUCCESSFUL REGISTRATION
       await Log.create({
         level: 'info',
-        message: `New user registered: ${email}`,
+        message: `New admin user created by superadmin`,
         adminId: user._id, // Log the newly created user's ID
         adminName: email,  // Log the user's email
       });
@@ -73,8 +76,7 @@ const registerUser = async (req, res) => {
   };
 
   
-
-//LOGIN
+// LOGIN DITO
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -103,9 +105,20 @@ const loginUser = async (req, res) => {
       return res.json({ error: 'Password does not match' });
     }
 
+    // CHECK IF ROLE IS ADMIN OR SUPERADMIN
+    if (user.role !== 'admin' && user.role !== 'superadmin') {
+      await Log.create({
+        level: 'warn',
+        message: 'Failed login attempt - not authorized',
+        adminId: user._id, // Log the user's ID
+        adminName: user.email, // Log the email
+      });
+      return res.json({ error: 'User Not authorized' });
+    }
+
     // GENERATE JWT TOKEN
     jwt.sign(
-      { email: user.email, id: user._id, firstName: user.firstName, lastName: user.lastName, roles: user.roles },
+      { email: user.email, id: user._id, firstName: user.firstName, lastName: user.lastName, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' },
       (err, token) => {
@@ -118,15 +131,24 @@ const loginUser = async (req, res) => {
           secure: true, // Set to false during development; use true in production when using HTTPS
           sameSite: 'None', // Allows cross-origin requests, which is often needed in development
           maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-      });
+        });
 
+        
         // Respond with user data and role
         res.json({
           ...user.toObject(),
-          role: user.roles.includes('superadmin') ? 'superadmin' : 'admin',
+          role: user.role === 'superadmin' ? 'superadmin' : 'admin',
         });
       }
     );
+
+    await Log.create({
+      level: 'info',
+      message: 'User logged in',
+      adminId: user._id, // Log the user's ID
+        adminName: user.email, // Log the email
+    });
+
   } catch (error) {
     await Log.create({
       level: 'error',
@@ -139,20 +161,34 @@ const loginUser = async (req, res) => {
 };
 
 
-  
-
-  
-  // LOGOUT ENDPOINT
-  const logoutUser = (req, res) => {
+// LOGOUT ENDPOINT
+const logoutUser = async (req, res) => {
+  try {
+    // Clear the cookie
     res.cookie('token', '', { 
-        maxAge: 1, 
-        httpOnly: true,  // Same as when the token was set
-        secure: true,    // Ensure this matches (for HTTPS)
-        sameSite: 'None', // Match sameSite policy
-        path: '/'        // Ensure the path is correct
+      maxAge: 1, 
+      httpOnly: true,  // Same as when the token was set
+      secure: true,    // Ensure this matches (for HTTPS)
+      sameSite: 'None', // Match sameSite policy
+      path: '/'        // Ensure the path is correct
     });
-    res.json('Logged out');
-  };
+
+    // Log the logout action
+    await Log.create({
+      level: 'info',
+      message: 'User logged out',
+      adminId: req.user._id, // Log the user's ID, assuming you're using req.user for authentication
+      adminName: req.user.email, // Log the email
+    });
+
+    // Send the response
+    return res.json({ message: 'Logged out' });
+  } catch (error) {
+    console.error('Error logging out:', error);
+    return res.status(500).json({ message: 'Error logging out' });
+  }
+};
+
   
 
 //GET PROFILE
