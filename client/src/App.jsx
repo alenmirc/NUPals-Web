@@ -31,8 +31,8 @@ import AdminLogs from './superadmin/Logs';
 import AdminPost from './superadmin/Post';
 import AdminSettings from './superadmin/Settings';
 
-axios.defaults.baseURL = 'http://localhost:8000';
-//axios.defaults.baseURL = 'https://nupals-web.onrender.com';
+//axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = 'https://nupals-web.onrender.com';
 //axios.defaults.baseURL = 'https://nupals-server.vercel.app'; 
 axios.defaults.withCredentials = true
 
