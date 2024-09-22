@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { test, registerUser, loginUser, logoutUser, getProfile, updateProfile, getUserprofile} = require('../controllers/authController');
 const { createUserPosting, getPost, getPostbyid, deletePost } = require('../controllers/userPostingController');
-const { getUsers, getAllpost, adminDeletepost, getLogs, editPost, updateUser, createUser, deleteUser } = require('../controllers/adminController');
+const { getUsers, getAllpost, adminDeletepost, getLogs, editPost, updateUser, createUser, deleteUser, updateSAdminpassword  } = require('../controllers/adminController');
+const { requestOtp, verifyOtp } = require('../controllers/resetPassword');
+const { getCounts, getLoggedInUsersCount } = require('..//controllers/dashboardController'); // Adjust path as needed
+
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const authenticate = require('../middleware/authenticate');
@@ -43,5 +46,16 @@ router.delete('/admindeletepost/:postId', adminDeletepost);
 router.put('/updateuser/:id', updateUser);
 router.delete('/deleteuser/:id', deleteUser);
 router.post('/createuser', createUser);
+router.put('/updatesadminpassword', updateSAdminpassword);
+
+
+//resetPassword controller
+router.post('/requestotp', requestOtp);
+router.post('/verifyotp', verifyOtp);
+
+
+//dasboardController like counts
+router.get('/counts', getCounts);
+router.get('/getloggedin', getLoggedInUsersCount);
 
 module.exports = router;

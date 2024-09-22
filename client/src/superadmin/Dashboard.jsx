@@ -1,10 +1,80 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css'; // Import your CSS file here
-import Logo from '../assets/logo.png';
 import Navbar from './component/Navbar'; // Import the Navbar component
 import Sidebar from './component/Sidebar'; 
+import axios from 'axios';
+import Chart from 'react-apexcharts';
 
 const Dashboard = () => {
+
+  const [counts, setCounts] = useState({
+    totalUsers: 0,
+    totalAdmin: 0,
+    totalStudent: 0,
+    totalPosts: 0,
+    totalLogs: 0,
+    newUsersToday: 0,
+  });
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const response = await axios.get('/counts');
+        setCounts(response.data);
+      } catch (error) {
+        console.error('Error fetching counts:', error);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
+  //apex chart
+
+  const [data, setData] = useState([]);
+  const [chartOptions, setChartOptions] = useState({
+    chart: {
+      type: 'line',
+      zoom: {
+        enabled: false,
+      },
+    },
+    xaxis: {
+      categories: [],
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+    },
+  });
+
+  useEffect(() => {
+    const fetchLoggedInCounts = async () => {
+      try {
+        const response = await axios.get('/getloggedin'); // Adjust the route
+        setData(response.data);
+
+        // Prepare the chart data
+        const dates = response.data.map(entry => entry._id); // Dates
+        const counts = response.data.map(entry => entry.count); // Counts
+
+        setChartOptions(prevOptions => ({
+          ...prevOptions,
+          xaxis: {
+            categories: dates,
+          },
+        }));
+
+        setSeries([{ name: 'Logged In Users', data: counts }]);
+      } catch (error) {
+        console.error('Error fetching logged-in users count:', error);
+      }
+    };
+
+    fetchLoggedInCounts();
+  }, []);
+
+  const [series, setSeries] = useState([]);
 
   return (
     <div className="app">
@@ -27,113 +97,63 @@ const Dashboard = () => {
             <div className="card">
               <div className="head">
                 <div>
-                  <h2>1500</h2>
-                  <p>Traffic</p>
-                </div>
-                <i className='bx bx-trending-up icon'></i>
+                  <h2 style={{ fontSize: '30px' }}>{counts.totalStudent}</h2>
+                  <p>Total Students</p>
+                </div>           
+                <i className='bx bx-user icon' style={{ color: 'blue' }}></i>
               </div>
-              <span className="progress" data-value="40%"></span>
-              <span className="label">40%</span>
             </div>
             <div className="card">
               <div className="head">
                 <div>
-                  <h2>234</h2>
-                  <p>Sales</p>
+                <h2 style={{ fontSize: '30px' }}>{counts.totalAdmin}</h2>
+                  <p>Total Admin</p>
                 </div>
-                <i className='bx bx-trending-down icon down'></i>
+                <i className='bx bx-user-circle icon' style={{ color: 'blue' }}></i>
               </div>
-              <span className="progress" data-value="60%"></span>
-              <span className="label">60%</span>
             </div>
             <div className="card">
               <div className="head">
                 <div>
-                  <h2>465</h2>
-                  <p>Pageviews</p>
+                  <h2 style={{ fontSize: '30px' }}>{counts.totalPosts}</h2>
+                  <p>Total Post</p>
                 </div>
-                <i className='bx bx-trending-up icon'></i>
+                <i className='bx bx-news icon' style={{ color: 'blue' }}></i>
               </div>
-              <span className="progress" data-value="30%"></span>
-              <span className="label">30%</span>
             </div>
             <div className="card">
               <div className="head">
                 <div>
-                  <h2>235</h2>
-                  <p>Visitors</p>
+                  <h2 style={{ fontSize: '30px' }}>{counts.totalLogs}</h2>
+                  <p>Total Logs</p>
                 </div>
-                <i className='bx bx-trending-up icon'></i>
+                <i className='bx bx-cog icon' style={{ color: 'blue' }}></i>
               </div>
-              <span className="progress" data-value="80%"></span>
-              <span className="label">80%</span>
             </div>
           </div>
           <div className="data">
             <div className="content-data">
               <div className="head">
-                <h3>Sales Report</h3>
-              
+                <h3>Logged In Users</h3>
               </div>
               <div className="chart">
-                <div id="chart"></div>
+                <div id="chart">
+                <Chart
+        options={chartOptions}
+        series={series}
+        type="line"
+        height={350}
+      />
+                </div>
               </div>
             </div>
             <div className="content-data">
               <div className="head">
-                <h3>Chatbox</h3>
-                <div className="menu">
-                  <i className='bx bx-dots-horizontal-rounded icon'></i>
-                  <ul className="menu-link">
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Save</a></li>
-                    <li><a href="#">Remove</a></li>
-                  </ul>
-                </div>
+                <h3>News</h3>
+              
               </div>
-              <div className="chat-box">
-                <p className="day"><span>Today</span></p>
-                <div className="msg">
-                  <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="" />
-                  <div className="chat">
-                    <div className="profile">
-                      <span className="username">Alan</span>
-                      <span className="time">18:30</span>
-                    </div>
-                    <p>Hello</p>
-                  </div>
-                </div>
-                <div className="msg me">
-                  <div className="chat">
-                    <div className="profile">
-                      <span className="time">18:30</span>
-                    </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque voluptatum eos quam dolores eligendi exercitationem animi nobis reprehenderit laborum! Nulla.</p>
-                  </div>
-                </div>
-                <div className="msg me">
-                  <div className="chat">
-                    <div className="profile">
-                      <span className="time">18:30</span>
-                    </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, architecto!</p>
-                  </div>
-                </div>
-                <div className="msg me">
-                  <div className="chat">
-                    <div className="profile">
-                      <span className="time">18:30</span>
-                    </div>
-                    <p>Lorem ipsum, dolor sit amet.</p>
-                  </div>
-                </div>
-              </div>
-              <form action="#">
-                <div className="form-group">
-                  <input type="text" placeholder="Type..." />
-                  <button type="submit" className="btn-send"><i className='bx bxs-send'></i></button>
-                </div>
-              </form>
+            
+          
             </div>
           </div>
         </main>

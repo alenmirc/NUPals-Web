@@ -1,9 +1,9 @@
 const Posts = require('../models/posting');
 const User = require('../models/user');
 const Log = require('../models/log'); // Import the Log model
-const { hashPassword, comparePassword} = require('../helpers/auth')
+const { hashPassword } = require('../helpers/auth')
 const jwt = require('jsonwebtoken');
-
+const bcrypt = require('bcrypt');
 
 
 // GET LOGS
@@ -22,7 +22,38 @@ const getLogs = async (req, res) => {
 };
 
 
-
+//UPDATE SUPER ADMIN PASSWORD
+const updateSAdminpassword = async (req, res) => {
+    const { userId, currentPassword, newPassword } = req.body;
+  
+    try {
+      // Find the user by ID
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Check if the current password matches
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Current password is incorrect' });
+      }
+  
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+  
+      // Update the user's password
+      user.password = hashedPassword;
+      await user.save();
+  
+      res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
 
 //GET ALL USERS
 
@@ -103,13 +134,23 @@ const adminDeletepost = async (req, res) => {
     // Update a user
     const updateUser = async (req, res) => {
         try {
-            const { id } = req.params;
-            const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true });
-            res.status(200).json(updatedUser);
+          const { id } = req.params;
+          const { password, ...otherData } = req.body;
+      
+          // If the password field is provided, hash it before updating the user
+          if (password) {
+            const hashedPassword = await hashPassword(password);
+            otherData.password = hashedPassword;
+          }
+      
+          const updatedUser = await User.findByIdAndUpdate(id, otherData, { new: true });
+          res.status(200).json(updatedUser);
         } catch (error) {
-            res.status(500).json({ message: 'Error updating user', error });
+          console.error('Error updating user:', error);
+          res.status(500).json({ message: 'Error updating user', error });
         }
-    };
+      };
+
 
 // Delete a user
 const deleteUser = async (req, res) => {
@@ -149,6 +190,7 @@ module.exports = {
     editPost,
     adminDeletepost,
     updateUser,
+    updateSAdminpassword,
     deleteUser,
     createUser
 };

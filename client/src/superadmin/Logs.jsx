@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Input } from 'antd';
+import { Table, Input, Spin } from 'antd';
 import axios from 'axios';
 import Navbar from './component/Navbar';
 import Sidebar from './component/Sidebar';
@@ -11,13 +11,17 @@ const { Search } = Input;
 const Logs = () => {
   const [logs, setLogs] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true); // Added loading state
 
   const fetchLogs = async () => {
     try {
+      setLoading(true); // Start loading
       const response = await axios.get('/getLogs');
       setLogs(response.data);
-    } catch (error) {
       console.error('Error fetching Logs:', error);
+      toast.error('Error fetching Logs');
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -81,6 +85,12 @@ const Logs = () => {
                   />
                 </div>
               </div>
+                {/* Show spinner while loading */}
+          {loading ? (
+                <div className="loading-spinner">
+                  <Spin tip="Loading posts..." />
+                </div>
+              ) : (
               <div className="table-responsive">
               <Table
                 columns={columns}
@@ -89,6 +99,7 @@ const Logs = () => {
                 pagination={{ pageSize: 10 }}
                 sorter={true}
               /></div>
+              )}
             </div>
           </div>
         </main>

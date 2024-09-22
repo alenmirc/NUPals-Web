@@ -1,7 +1,7 @@
 // Navbar.js
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { UserContext } from '../../../context/userContext';
-import userlogo from '../../assets/userlogo.png';
+import { UserContext } from '../../../../context/userContext';
+import userlogo from '../../../assets/userlogo.png';
 import 'boxicons/css/boxicons.min.css';
 import axios from 'axios';
 
@@ -39,7 +39,7 @@ const Navbar = () => {
     <nav>
       <i className='bx bx-menu toggle-sidebar'></i>
       <form action="#">
-        <div className="welcome-message">Super Admin</div>
+        <div className="welcome-message">Admin</div>
       </form>
       <a href="#" className="nav-link">
         <i className='bx bxs-bell icon'></i>
@@ -59,7 +59,7 @@ const Navbar = () => {
           <li className="user-info">
             <span>{firstName} {lastName}</span>
           </li>
-          <li><a href="/super/settings"><i className='bx bxs-cog'></i> Settings</a></li>
+          <li><a href="/settings"><i className='bx bxs-cog'></i> Settings</a></li>
           <li><a href="#" onClick={logout}><i className='bx bxs-log-out-circle'></i> Logout</a></li>
         </ul>
       </div>

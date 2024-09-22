@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Logo from '../../assets/logo.png';
+import Logo from '../../../assets/logo.png';
 import { useLocation, Link } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -71,28 +71,23 @@ const Sidebar = () => {
         </div>
         <ul className="side-menu">
           <li>
-            <Link to="/super/dashboard" className={isActive('/super/dashboard') ? 'active' : ''}>
+            <Link to="/dashboard" className={isActive('/dashboard') ? 'active' : ''}>
               <i className='bx bxs-dashboard icon'></i> Dashboard
             </Link>
           </li>
           <li className="divider" data-text="main">Main</li>
           <li>
-            <Link to="/super/admin" className={isActive('/super/admin') ? 'active' : ''}>
-              <i className='bx bxs-user icon'></i> Admin Management
-            </Link>
-          </li>
-          <li>
-            <Link to="/super/student" className={isActive('/super/student') ? 'active' : ''}>
+            <Link to="/student" className={isActive('/student') ? 'active' : ''}>
               <i className='bx bxs-cog icon'></i> Student Management
             </Link>
           </li>
           <li>
-            <Link to="/super/post" className={isActive('/super/post') ? 'active' : ''}>
+            <Link to="/post" className={isActive('/post') ? 'active' : ''}>
               <i className='bx bxs-widget icon'></i> Post Management
             </Link>
           </li>
           <li>
-            <Link to="/super/logs" className={isActive('/super/logs') ? 'active' : ''}>
+            <Link to="/logs" className={isActive('/logs') ? 'active' : ''}>
               <i className='bx bxs-cog icon'></i> System Logs
             </Link>
           </li>

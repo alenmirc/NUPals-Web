@@ -1,131 +1,41 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Table, Form, Button, InputGroup, Modal  } from 'react-bootstrap';
-import './style.css'; // Import your CSS file here
-import { UserContext } from '../../../context/userContext';
-import Logo from '../../assets/logo.png';
-import userlogo from '../../assets/userlogo.png';
-import 'boxicons/css/boxicons.min.css'; // Import Boxicons CSS
+import React, { useState, useEffect, useContext } from 'react';
+import { Modal, Table, Input, Button, Form, Spin } from 'antd';
 import axios from 'axios';
-
-const App = () => {
-  const [profileDropdownVisible, setProfileDropdownVisible] = useState(false);
-  const [menuVisible, setMenuVisible] = useState({});
-
-  const sidebarRef = useRef(null);
-  const profileRef = useRef(null);
-
-  useEffect(() => {
-    const sidebar = sidebarRef.current;
-    const allDropdown = sidebar.querySelectorAll('.side-dropdown');
-    const toggleSidebar = document.querySelector('nav .toggle-sidebar');
-    const allSideDivider = sidebar.querySelectorAll('.divider');
-
-    const handleClickDropdown = (e) => {
-      e.preventDefault();
-      const item = e.target.closest('a');
-      if (!item.classList.contains('active')) {
-        allDropdown.forEach(i => {
-          const aLink = i.parentElement.querySelector('a:first-child');
-          aLink.classList.remove('active');
-          i.classList.remove('show');
-        });
-      }
-      item.classList.toggle('active');
-      item.nextElementSibling.classList.toggle('show');
-    };
-
-    const handleClickSidebar = () => {
-      sidebar.classList.toggle('hide');
-      if (sidebar.classList.contains('hide')) {
-        allSideDivider.forEach(item => {
-          item.textContent = '-';
-        });
-        allDropdown.forEach(item => {
-          const a = item.parentElement.querySelector('a:first-child');
-          a.classList.remove('active');
-          item.classList.remove('show');
-        });
-      } else {
-        allSideDivider.forEach(item => {
-          item.textContent = item.dataset.text;
-        });
-      }
-    };
-
-    const handleMouseLeaveSidebar = () => {
-      if (sidebar.classList.contains('hide')) {
-        allDropdown.forEach(item => {
-          const a = item.parentElement.querySelector('a:first-child');
-          a.classList.remove('active');
-          item.classList.remove('show');
-        });
-        allSideDivider.forEach(item => {
-          item.textContent = '-';
-        });
-      }
-    };
-
-    const handleMouseEnterSidebar = () => {
-      if (sidebar.classList.contains('hide')) {
-        allDropdown.forEach(item => {
-          const a = item.parentElement.querySelector('a:first-child');
-          a.classList.remove('active');
-          item.classList.remove('show');
-        });
-        allSideDivider.forEach(item => {
-          item.textContent = item.dataset.text;
-        });
-      }
-    };
-
-    allDropdown.forEach(item => {
-      const a = item.parentElement.querySelector('a:first-child');
-      a.addEventListener('click', handleClickDropdown);
-    });
-
-    toggleSidebar.addEventListener('click', handleClickSidebar);
-    sidebar.addEventListener('mouseleave', handleMouseLeaveSidebar);
-    sidebar.addEventListener('mouseenter', handleMouseEnterSidebar);
-
-    return () => {
-      // Cleanup event listeners
-      allDropdown.forEach(item => {
-        const a = item.parentElement.querySelector('a:first-child');
-        a.removeEventListener('click', handleClickDropdown);
-      });
-      toggleSidebar.removeEventListener('click', handleClickSidebar);
-      sidebar.removeEventListener('mouseleave', handleMouseLeaveSidebar);
-      sidebar.removeEventListener('mouseenter', handleMouseEnterSidebar);
-    };
-  }, []);
-
-  const handleProfileClick = () => {
-    setProfileDropdownVisible(prev => !prev);
-  };
-
-  const handleMenuClick = (index) => {
-    setMenuVisible(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
-  };
+import Navbar from './component/Navbar';
+import Sidebar from './component/Sidebar';
+import './style.css';
+import { toast } from 'react-hot-toast';
+import { UserContext } from '../../../context/userContext';
 
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [postIdToDelete, setPostIdToDelete] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortedColumn, setSortedColumn] = useState(null);
-  const [sortDirection, setSortDirection] = useState('asc');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+const { Search } = Input;
+
+const Post = () => {
   const [posts, setPosts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false); // State for create modal
+  const [confirmText, setConfirmText] = useState('');
+  const [postToDelete, setPostToDelete] = useState(null);
+  const [postToEdit, setPostToEdit] = useState(null);
+  const [editContent, setEditContent] = useState('');
+  const [createContent, setCreateContent] = useState(''); // State for new post content
+  const [base64String, setBase64String] = useState('');
+  const [image, setImage] = useState(null);
+  const [video, setVideo] = useState(null);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('/getallpost'); // Changed endpoint to /getallposts
+      setLoading(true); // Start loading
+      const response = await axios.get('/getallpost');
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
+      toast.error('Error fetching posts');
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -133,252 +43,293 @@ const App = () => {
     fetchPosts();
   }, []);
 
-  const handleSort = (column) => {
-    const direction = sortedColumn === column && sortDirection === 'asc' ? 'desc' : 'asc';
-    setSortedColumn(column);
-    setSortDirection(direction);
-  };
-
-  const sortedPosts = [...posts].sort((a, b) => {
-    if (!sortedColumn) return 0;
-    const aValue = a[sortedColumn];
-    const bValue = b[sortedColumn];
-    if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-    return 0;
-  });
-
-  const filteredPosts = sortedPosts.filter(post =>
-    Object.values(post).some(value => typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredPosts = posts.filter(post =>
+    Object.values(post).some(value =>
+      typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedPosts = filteredPosts.slice(startIndex, startIndex + itemsPerPage);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const fileSize = file.size;
+    const maxSize = 10 * 1024 * 1024; // 10MB
 
-  const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
+    if (fileSize > maxSize) {
+      toast.error('File size exceeds 10MB');
+      return;
+    }
 
-  const handleDelete = async () => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64 = reader.result;
+      setBase64String(base64); // Save base64 string
+      // Update image or video based on file type
+      if (file.type.includes('image')) {
+        setImage(file);
+        setVideo(null); // Clear video if an image is selected
+      } else if (file.type.includes('video')) {
+        setVideo(file);
+        setImage(null); // Clear image if a video is selected
+      }
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const showEditModal = (post) => {
+    setPostToEdit(post);
+    setEditContent(post.content);
+    setBase64String(post.media || '');
+    setIsEditModalVisible(true);
+  };
+
+  const handleEditSubmit = async () => {
+    const formData = new FormData();
+    formData.append('content', editContent);
+    if (base64String) {
+      formData.append('media', base64String);
+    }
+
     try {
-      await axios.delete(`/admindeletepost/${postIdToDelete}`);
-      setPosts(posts.filter(post => post._id !== postIdToDelete));
-      setShowDeleteModal(false);
+      await axios.put(`/editpost/${postToEdit._id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      fetchPosts();
+      setIsEditModalVisible(false);
+      toast.success('Post updated successfully');
     } catch (error) {
-      console.error('Error deleting post:', error);
+      console.error('Error updating post:', error);
+      toast.error('Failed to update post');
     }
   };
 
+  const showCreateModal = () => {
+    setCreateContent(''); // Reset content for new post
+    setBase64String(''); // Reset media for new post
+    setImage(null); // Clear image state
+    setVideo(null); // Clear video state
+    setIsCreateModalVisible(true);
+  };
 
-const [userData, setUserData] = useState(null);
-const [firstName, setFirstName] = useState('');
-const [email, setEmail] = useState('');
-const [lastName, setLastName] = useState('');
-const [profilePicture, setProfilePicture] = useState(''); // Add profilePicture state
+  const { user } = useContext(UserContext);
+  const userId = user?.id;
 
-const { user, logout } = useContext(UserContext); // Get user info from context
-const userId = user?.id;
+  const handleCreateSubmit = async () => {
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('content', createContent);
+    if (base64String) {
+      formData.append('media', base64String);
+    }
 
-useEffect(() => {
-  if (userId) {
-    axios.get(`/getUserprofile?userId=${userId}`)
-      .then(response => {
-        console.log(response.data); // Log the userData received from the API
-        setUserData(response.data);
-        setFirstName(response.data.firstName || ''); // Ensure empty string if data is not available
-        setLastName(response.data.lastName || '');
-        setEmail(response.data.email || ''); // Ensure empty string if data is not available
-        setProfilePicture(response.data.profilePicture);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-}, [userId]);
-
-  useEffect(() => {
-    // Progress bar
-    const allProgress = document.querySelectorAll('main .card .progress');
-    allProgress.forEach(item => {
-      item.style.setProperty('--value', item.dataset.value);
-    });
-
-    // ApexCharts
-    const options = {
-      series: [{
-        name: 'series1',
-        data: [31, 40, 28, 51, 42, 109, 100]
-      }, {
-        name: 'series2',
-        data: [11, 32, 45, 32, 34, 52, 41]
-      }],
-      chart: {
-        height: 350,
-        type: 'area'
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        curve: 'smooth'
-      },
-      xaxis: {
-        type: 'datetime',
-        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-      },
-      tooltip: {
-        x: {
-          format: 'dd/MM/yy HH:mm'
+    try {
+      await axios.post('/createuserposting', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
         },
-      },
-    };
+      });
+      fetchPosts();
+      setIsCreateModalVisible(false);
+      toast.success('Post created successfully');
+    } catch (error) {
+      console.error('Error creating post:', error);
+      toast.error('Failed to create post');
+    }
+  };
 
-    const chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
-  }, []);
+  const showDeleteModal = (postId) => {
+    setPostToDelete(postId);
+    setIsModalVisible(true);
+    setConfirmText(''); // Reset confirmText when the modal is shown
+  };
 
-  
+  const handleOk = async () => {
+    try {
+      await axios.delete(`/deletepost/${postToDelete}`);
+      fetchPosts();
+      setIsModalVisible(false);
+      toast.success('Post deleted successfully');
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      toast.error('Failed to delete post');
+    }
+  };
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'userId',
+      render: (user) => `${user?.firstName || 'N/A'} ${user?.lastName || ''}`.trim(),
+      sorter: (a, b) =>
+        `${a.userId?.firstName} ${a.userId?.lastName}`.localeCompare(`${b.userId?.firstName} ${b.userId?.lastName}`),
+    },
+    {
+      title: 'Email',
+      dataIndex: 'userId',
+      render: (userId) => (userId?.email ? userId.email : 'N/A'),
+      sorter: (a, b) => a.userId?.email.localeCompare(b.userId?.email),
+    },
+    {
+      title: 'Content',
+      dataIndex: 'content',
+      sorter: (a, b) => a.content.localeCompare(b.content),
+    },
+    {
+      title: 'Media',
+      dataIndex: 'media',
+      render: media => media ? <img src={media} alt="Media" style={{ width: '50px', height: '50px' }} /> : 'No Media',
+    },
+    {
+      title: 'Created At',
+      dataIndex: 'createdAt',
+      render: createdAt => new Date(createdAt).toLocaleString(),
+      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+    },
+    {
+      title: 'Updated At',
+      dataIndex: 'updatedAt',
+      render: updatedAt => new Date(updatedAt).toLocaleString(),
+      sorter: (a, b) => new Date(a.updatedAt) - new Date(b.updatedAt),
+    },
+    {
+      title: 'Action',
+      render: (text, record) => (
+        <div>
+          <Button type="primary" size="small" onClick={() => showEditModal(record)}>Edit</Button>
+          <Button type="danger" className="table-delete-button" size="small" onClick={() => showDeleteModal(record._id)}>Delete</Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="app">
-      {/* SIDEBAR */}
-      <section id="sidebar" ref={sidebarRef}>
-      <div className="brand">
-          <img src={Logo} alt="Logo" className="logo" />
-          <span className="text">NU Pals</span>
-        </div>
-        <ul className="side-menu">
-          <li><a href="/dashboard"><i className='bx bxs-dashboard icon'></i> Dashboard</a></li>
-          <li className="divider" data-text="main">Main</li>
-          <li><a href="/users" ><i className='bx bxs-user icon'></i> Users</a></li>
-          <li><a href="/post" className="active"><i className='bx bxs-widget icon'></i> Posting</a></li>
-      
-
-         
-        </ul>
-      
-      </section>
-
-      {/* NAVBAR */}
+      <Sidebar />
       <section id="content">
-      <nav>
-          <i className='bx bx-menu toggle-sidebar'></i>
-          <form action="#">
-          <div className="welcome-message">
-    Admin
-  </div>
-          </form>
-          <a href="#" className="nav-link">
-            <i className='bx bxs-bell icon'></i>
-
-          </a>
-          <a href="#" className="nav-link">
-            <i className='bx bxs-message-square-dots icon'></i>
-          </a>
-          <span className="divider"></span>
-          <div className="welcome-message">
-    Welcome, {firstName}!
-  </div>
-          <div className="profile" ref={profileRef}>
-          <img src={profilePicture || userlogo} alt="" onClick={handleProfileClick} />
-            <ul className={`profile-link ${profileDropdownVisible ? 'show' : ''}`}>
-              <li><a href="#"><i className='bx bxs-user-circle icon'></i> Profile</a></li>
-              <li><a href="#"><i className='bx bxs-cog'></i> Settings</a></li>
-              <li><a href="#" onClick={logout}><i className='bx bxs-log-out-circle'></i> Logout</a></li>
-            </ul>
-          </div>
-        </nav>
-
-
-        {/* MAIN */}
+        <Navbar />
         <main>
-          <h1 className="title">Posting</h1>
+          <h1 className="title">Posts</h1>
           <ul className="breadcrumbs">
             <li><a href="#">Home</a></li>
             <li className="divider">/</li>
-            <li><a href="#" className="active">Posting</a></li>
+            <li><a href="#" className="active">Posts</a></li>
           </ul>
-         
+
           <div className="data">
             <div className="content-data">
-              <div className="head">
+              <div className="head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Button type="primary" onClick={showCreateModal}>Create New Post</Button>
                 <div className="left">
-                <InputGroup className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="Search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  <Search
+                    placeholder="Search posts"
+                    enterButton
+                    onSearch={value => setSearchQuery(value)}
+                    className="search-input"
+                    style={{ marginBottom: '20px' }}
+                  />
+                </div>
+              </div>
+             {/* Show spinner while loading */}
+             {loading ? (
+                <div className="loading-spinner">
+                  <Spin tip="Loading posts..." />
+                </div>
+              ) : (
+                <div className="table-responsive">
+                  <Table
+                    columns={columns}
+                    dataSource={filteredPosts}
+                    rowKey="_id"
+                    pagination={{ pageSize: 10 }}
+                  />
+                </div>
+                )}
+            </div>
+          </div>
+
+          <Modal
+            title="Confirm Deletion"
+            open={isModalVisible}
+            onOk={handleOk}
+            onCancel={() => {
+              setIsModalVisible(false);
+              setConfirmText('');
+              setPostToDelete(null);
+            }}
+            okButtonProps={{ disabled: confirmText !== 'delete' }}
+          >
+            <p>Type "delete" to confirm deletion:</p>
+            <Input
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder="Type 'delete' to confirm"
+            />
+          </Modal>
+
+          {/* Edit Modal */}
+          <Modal
+            title="Edit Post"
+            open={isEditModalVisible}
+            onOk={handleEditSubmit}
+            onCancel={() => setIsEditModalVisible(false)}
+            okText="Save"
+          >
+            <Form layout="vertical">
+              <Form.Item label="Content">
+                <Input.TextArea
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  rows={4}
+                  placeholder="Enter post content"
                 />
-              </InputGroup>
-            </div>
-         
-       </div>
+              </Form.Item>
+              <Form.Item label="Upload Media">
+                <Input
+                  type="file"
+                  accept="image/*, video/*"
+                  onChange={handleFileChange}
+                />
+                {image && <p>Selected Image: {image.name}</p>}
+                {video && <p>Selected Video: {video.name}</p>}
+              </Form.Item>
+            </Form>
+          </Modal>
 
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th onClick={() => handleSort('userId.firstName')}>User First Name</th>
-                <th onClick={() => handleSort('userId.lastName')}>User Last Name</th>
-                <th onClick={() => handleSort('content')}>Content</th>
-                <th onClick={() => handleSort('media')}>Media</th>
-                <th onClick={() => handleSort('createdAt')}>Created At</th>
-                <th onClick={() => handleSort('updatedAt')}>Updated At</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-  {paginatedPosts.map(post => (
-    <tr key={post._id}>
-      <td>{post.userId ? post.userId.firstName : 'N/A'}</td> {/* Check if userId exists */}
-      <td>{post.userId ? post.userId.lastName : 'N/A'}</td>
-      <td>{post.content}</td>
-      <td>
-        {post.media && (
-          <img src={post.media} alt="Media" style={{ width: '50px', height: '50px' }} />
-        )}
-      </td>
-      <td>{new Date(post.createdAt).toLocaleString()}</td>
-      <td>{new Date(post.updatedAt).toLocaleString()}</td>
-      <td>
-        <Button variant="primary" size="sm">Edit</Button>
-        <Button variant="danger" size="sm" className="ml-2" onClick={() => {
-          setShowDeleteModal(true);
-          setPostIdToDelete(post._id);
-        }}>Delete</Button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
-          </Table>
-          
-          <div className="d-flex justify-content-between">
-            <div>
-              Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredPosts.length)} of {filteredPosts.length} entries
-            </div>
-            <div>
-              <Button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Previous</Button>
-              <span className="mx-2">{currentPage}</span>
-              <Button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>Next</Button>
-            </div>
-          </div>  </div></div>
+          {/* Create Modal */}
+          <Modal
+            title="Create New Post"
+            open={isCreateModalVisible}
+            onOk={handleCreateSubmit}
+            onCancel={() => setIsCreateModalVisible(false)}
+            okText="Create"
+          >
+            <Form layout="vertical">
+              <Form.Item label="Content">
+                <Input.TextArea
+                  value={createContent}
+                  onChange={(e) => setCreateContent(e.target.value)}
+                  rows={4}
+                  placeholder="Enter post content"
+                />
+              </Form.Item>
+              <Form.Item label="Upload Media">
+                <Input
+                  type="file"
+                  accept="image/*, video/*"
+                  onChange={handleFileChange}
+                />
+                {image && <p>Selected Image: {image.name}</p>}
+                {video && <p>Selected Video: {video.name}</p>}
+              </Form.Item>
+            </Form>
+          </Modal>
         </main>
       </section>
-
-       {/* Delete confirmation modal */}
-       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this post?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
-          <Button variant="danger" onClick={handleDelete}>Delete</Button>
-        </Modal.Footer>
-      </Modal>
-
-
     </div>
-  
   );
 };
 
-export default App;
+export default Post;

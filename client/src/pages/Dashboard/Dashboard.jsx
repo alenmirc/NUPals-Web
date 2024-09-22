@@ -1,145 +1,89 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './style.css'; // Import your CSS file here
-import { UserContext } from '../../../context/userContext';
-import Logo from '../../assets/logo.png';
-import userlogo from '../../assets/userlogo.png';
-import 'boxicons/css/boxicons.min.css'; // Import Boxicons CSS
+import Navbar from './component/Navbar'; // Import the Navbar component
+import Sidebar from './component/Sidebar'; 
 import axios from 'axios';
+import Chart from 'react-apexcharts';
 import {toast} from 'react-hot-toast'
+import { UserContext } from '../../../context/userContext';
 
 
-const App = () => {
-  const [profileDropdownVisible, setProfileDropdownVisible] = useState(false);
-  const sidebarRef = useRef(null);
-  const profileRef = useRef(null);
+
+const Dashboard = () => {
+
+  const { user  } = useContext(UserContext); // Get user info from context
+const userId = user?.id;
+
+  const [counts, setCounts] = useState({
+    totalUsers: 0,
+    totalAdmin: 0,
+    totalStudent: 0,
+    totalPosts: 0,
+    totalLogs: 0,
+    newUsersToday: 0,
+  });
 
   useEffect(() => {
-    const sidebar = sidebarRef.current;
-    const allDropdown = sidebar.querySelectorAll('.side-dropdown');
-    const toggleSidebar = document.querySelector('nav .toggle-sidebar');
-    const allSideDivider = sidebar.querySelectorAll('.divider');
-
-    const handleClickDropdown = (e) => {
-      e.preventDefault();
-      const item = e.target.closest('a');
-      if (!item.classList.contains('active')) {
-        allDropdown.forEach(i => {
-          const aLink = i.parentElement.querySelector('a:first-child');
-          aLink.classList.remove('active');
-          i.classList.remove('show');
-        });
-      }
-      item.classList.toggle('active');
-      item.nextElementSibling.classList.toggle('show');
-    };
-
-    const handleClickSidebar = () => {
-      sidebar.classList.toggle('hide');
-      if (sidebar.classList.contains('hide')) {
-        allSideDivider.forEach(item => {
-          item.textContent = '-';
-        });
-        allDropdown.forEach(item => {
-          const a = item.parentElement.querySelector('a:first-child');
-          a.classList.remove('active');
-          item.classList.remove('show');
-        });
-      } else {
-        allSideDivider.forEach(item => {
-          item.textContent = item.dataset.text;
-        });
+    const fetchCounts = async () => {
+      try {
+        const response = await axios.get('/counts');
+        setCounts(response.data);
+      } catch (error) {
+        console.error('Error fetching counts:', error);
       }
     };
 
-    const handleMouseLeaveSidebar = () => {
-      if (sidebar.classList.contains('hide')) {
-        allDropdown.forEach(item => {
-          const a = item.parentElement.querySelector('a:first-child');
-          a.classList.remove('active');
-          item.classList.remove('show');
-        });
-        allSideDivider.forEach(item => {
-          item.textContent = '-';
-        });
-      }
-    };
-
-    const handleMouseEnterSidebar = () => {
-      if (sidebar.classList.contains('hide')) {
-        allDropdown.forEach(item => {
-          const a = item.parentElement.querySelector('a:first-child');
-          a.classList.remove('active');
-          item.classList.remove('show');
-        });
-        allSideDivider.forEach(item => {
-          item.textContent = item.dataset.text;
-        });
-      }
-    };
-
-    allDropdown.forEach(item => {
-      const a = item.parentElement.querySelector('a:first-child');
-      a.addEventListener('click', handleClickDropdown);
-    });
-
-    toggleSidebar.addEventListener('click', handleClickSidebar);
-    sidebar.addEventListener('mouseleave', handleMouseLeaveSidebar);
-    sidebar.addEventListener('mouseenter', handleMouseEnterSidebar);
-
-    return () => {
-      // Cleanup event listeners
-      allDropdown.forEach(item => {
-        const a = item.parentElement.querySelector('a:first-child');
-        a.removeEventListener('click', handleClickDropdown);
-      });
-      toggleSidebar.removeEventListener('click', handleClickSidebar);
-      sidebar.removeEventListener('mouseleave', handleMouseLeaveSidebar);
-      sidebar.removeEventListener('mouseenter', handleMouseEnterSidebar);
-    };
+    fetchCounts();
   }, []);
 
-  const handleProfileClick = () => {
-    setProfileDropdownVisible(prev => !prev);
-  };
+  //apex chart
 
-
-
-  const [userData, setUserData] = useState(null);
-  const [firstName, setFirstName] = useState('');
-  const [email, setEmail] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [profilePicture, setProfilePicture] = useState(''); // Add profilePicture state
-  
-  const { user, logout } = useContext(UserContext); // Get user info from context
-  const userId = user?.id;
-
-  useEffect(() => {
-    if (userId) {
-      axios.get(`/getUserprofile?userId=${userId}`)
-        .then(response => {
-          console.log(response.data); // Log the userData received from the API
-          setUserData(response.data);
-          setFirstName(response.data.firstName || ''); // Ensure empty string if data is not available
-          setLastName(response.data.lastName || '');
-          setEmail(response.data.email || ''); // Ensure empty string if data is not available
-          setProfilePicture(response.data.profilePicture);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-  }, [userId]);
+  const [data, setData] = useState([]);
+  const [chartOptions, setChartOptions] = useState({
+    chart: {
+      type: 'line',
+      zoom: {
+        enabled: false,
+      },
+    },
+    xaxis: {
+      categories: [],
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+    },
+  });
 
   useEffect(() => {
-    // Progress bar
-    const allProgress = document.querySelectorAll('main .card .progress');
-    allProgress.forEach(item => {
-      item.style.setProperty('--value', item.dataset.value);
-    });
+    const fetchLoggedInCounts = async () => {
+      try {
+        const response = await axios.get('/getloggedin'); // Adjust the route
+        setData(response.data);
 
- 
+        // Prepare the chart data
+        const dates = response.data.map(entry => entry._id); // Dates
+        const counts = response.data.map(entry => entry.count); // Counts
+
+        setChartOptions(prevOptions => ({
+          ...prevOptions,
+          xaxis: {
+            categories: dates,
+          },
+        }));
+
+        setSeries([{ name: 'Logged In Users', data: counts }]);
+      } catch (error) {
+        console.error('Error fetching logged-in users count:', error);
+      }
+    };
+
+    fetchLoggedInCounts();
   }, []);
 
+  const [series, setSeries] = useState([]);
+
+  //post
   const [postContent, setPostContent] = useState('');  // Text content state
   const [image, setImage] = useState(null);            // Image upload state
   const [video, setVideo] = useState(null);            // Video upload state
@@ -197,57 +141,15 @@ const App = () => {
       });
   };
 
+
   return (
     <div className="app">
-      {/* SIDEBAR */}
-      <section id="sidebar" ref={sidebarRef}>
-      <div className="brand">
-          <img src={Logo} alt="Logo" className="logo" />
-          <span className="text">NU Pals</span>
-        </div>
-        <ul className="side-menu">
-          <li><a href="/dashboard" className="active"><i className='bx bxs-dashboard icon'></i> Dashboard</a></li>
-          <li className="divider" data-text="main">Main</li>
-          <li><a href="/users"><i className='bx bxs-user icon'></i> Users</a></li>
-          <li><a href="/post"><i className='bx bxs-widget icon'></i> Posting</a></li>
-      
-
-         
-        </ul>
-      
-      </section>
+       {/* SIDEBAR */}
+       <Sidebar /> {/* Sidebar component */}
 
       {/* NAVBAR */}
       <section id="content">
-        <nav>
-          <i className='bx bx-menu toggle-sidebar'></i>
-          <form action="#">
-          <div className="welcome-message">
-    Admin
-  </div>
-          </form>
-          <a href="#" className="nav-link">
-            <i className='bx bxs-bell icon'></i>
-
-          </a>
-          <a href="#" className="nav-link">
-            <i className='bx bxs-message-square-dots icon'></i>
-          </a>
-          <span className="divider"></span>
-
-<div className="profile" ref={profileRef}>
-  <img src={profilePicture || userlogo} alt="" onClick={handleProfileClick} />
-  <ul className={`profile-link ${profileDropdownVisible ? 'show' : ''}`}>
-    <li className="user-info">
-      <span>{firstName} {lastName}</span>
-    </li>
-    <li><a href="#"><i className='bx bxs-cog'></i> Settings</a></li>
-    <li><a href="#" onClick={logout}><i className='bx bxs-log-out-circle'></i> Logout</a></li>
-  </ul>
-</div>
-
-        </nav>
-
+        <Navbar /> {/* Use the Navbar component here */}
 
         {/* MAIN */}
         <main>
@@ -261,30 +163,57 @@ const App = () => {
             <div className="card">
               <div className="head">
                 <div>
-                  <h2>1500</h2>
-                  <p>Total Users</p>
-                </div>
-                <i className='bx bx-trending-up icon'></i>
+                  <h2 style={{ fontSize: '30px' }}>{counts.totalStudent}</h2>
+                  <p>Total Students</p>
+                </div>           
+                <i className='bx bx-user icon' style={{ color: 'blue' }}></i>
               </div>
-              <span className="progress" data-value="40%"></span>
-              <span className="label">40%</span>
             </div>
             <div className="card">
               <div className="head">
                 <div>
-                  <h2>234</h2>
+                <h2 style={{ fontSize: '30px' }}>{counts.totalAdmin}</h2>
+                  <p>Total Admin</p>
+                </div>
+                <i className='bx bx-user-circle icon' style={{ color: 'blue' }}></i>
+              </div>
+            </div>
+            <div className="card">
+              <div className="head">
+                <div>
+                  <h2 style={{ fontSize: '30px' }}>{counts.totalPosts}</h2>
                   <p>Total Post</p>
                 </div>
-                <i className='bx bx-trending-down icon down'></i>
+                <i className='bx bx-news icon' style={{ color: 'blue' }}></i>
               </div>
-              <span className="progress" data-value="60%"></span>
-              <span className="label">60%</span>
             </div>
-
+            <div className="card">
+              <div className="head">
+                <div>
+                  <h2 style={{ fontSize: '30px' }}>{counts.totalLogs}</h2>
+                  <p>Total Logs</p>
+                </div>
+                <i className='bx bx-cog icon' style={{ color: 'blue' }}></i>
+              </div>
+            </div>
           </div>
           <div className="data">
-
-          <div className="content-data">
+            <div className="content-data">
+              <div className="head">
+                <h3>Logged In Users</h3>
+              </div>
+              <div className="chart">
+                <div id="chart">
+                <Chart
+        options={chartOptions}
+        series={series}
+        type="line"
+        height={350}
+      />
+                </div>
+              </div>
+            </div>
+            <div className="content-data">
       <div className="head">
         <h3>Create a Post</h3>
       </div>
@@ -334,14 +263,11 @@ const App = () => {
         <button type="submit" className="btn btn-primary">Post</button>
       </form>
     </div>
-
-
-</div>
-
+          </div>
         </main>
       </section>
     </div>
   );
 };
 
-export default App;
+export default Dashboard;

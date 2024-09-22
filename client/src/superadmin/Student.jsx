@@ -7,7 +7,7 @@ import Sidebar from './component/Sidebar';
 import userlogo from '../assets/userlogo.png';
 import { toast } from 'react-hot-toast';
 
-const Admin = () => {
+const Student = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -17,8 +17,7 @@ const Admin = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [updatedUser, setUpdatedUser] = useState({});
   const [loading, setLoading] = useState(true); // Added loading state
-
-
+  
   const fetchUsers = async () => {
     try {
       setLoading(true); // Start loading
@@ -30,7 +29,9 @@ const Admin = () => {
     } finally {
       setLoading(false); // End loading
     }
-  };
+    };
+
+ 
 
 
   useEffect(() => {
@@ -150,7 +151,7 @@ const Admin = () => {
     )
   );
 
-  const adminUsers = filteredUsers.filter(user => user.role === 'admin'); // Filter for admin users
+  const adminUsers = filteredUsers.filter(user => user.role === 'student'); // Filter for admin users
   const paginatedAdminUsers = adminUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage); // Paginate the filtered admin users
   const columns = [
     {
@@ -219,11 +220,11 @@ const Admin = () => {
       <section id="content">
         <Navbar />
         <main>
-        <h1 className="title">Admin Management</h1>
+        <h1 className="title">Student Management</h1>
           <ul className="breadcrumbs">
             <li><a href="#">Home</a></li>
             <li className="divider">/</li>
-            <li><a href="#" className="active">Admin Management</a></li>
+            <li><a href="#" className="active">Student Management</a></li>
           </ul>
 
           <div className="data">
@@ -236,8 +237,9 @@ const Admin = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{ marginBottom: '20px', width: '300px' }}
       /></div>
-          {/* Show spinner while loading */}
-          {loading ? (
+          
+            {/* Show spinner while loading */}
+            {loading ? (
                 <div className="loading-spinner">
                   <Spin tip="Loading posts..." />
                 </div>
@@ -361,4 +363,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default Student;

@@ -14,7 +14,9 @@ const userSchema = new Schema({
         type: String, // Update media type to String
         required: false,
         default: null
-    }
+    },
+    resetPasswordOtp: { type: String }, // Field to store the OTP
+    resetPasswordExpires: { type: Date }, // Field to store the expiration time  
 }, { timestamps: true });
 
 const UserModel = mongoose.model('User', userSchema);

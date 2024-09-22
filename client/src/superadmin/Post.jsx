@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Modal, Table, Input, Button, Form } from 'antd';
+import { Modal, Table, Input, Button, Form, Spin } from 'antd';
 import axios from 'axios';
 import Navbar from './component/Navbar';
 import Sidebar from './component/Sidebar';
@@ -23,13 +23,18 @@ const Post = () => {
   const [base64String, setBase64String] = useState('');
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   const fetchPosts = async () => {
     try {
+      setLoading(true); // Start loading
       const response = await axios.get('/getallpost');
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
+      toast.error('Error fetching posts');
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -226,14 +231,21 @@ const Post = () => {
                   />
                 </div>
               </div>
-              <div className="table-responsive">
-                <Table
-                  columns={columns}
-                  dataSource={filteredPosts}
-                  rowKey="_id"
-                  pagination={{ pageSize: 10 }}
-                />
-              </div>
+             {/* Show spinner while loading */}
+             {loading ? (
+                <div className="loading-spinner">
+                  <Spin tip="Loading posts..." />
+                </div>
+              ) : (
+                <div className="table-responsive">
+                  <Table
+                    columns={columns}
+                    dataSource={filteredPosts}
+                    rowKey="_id"
+                    pagination={{ pageSize: 10 }}
+                  />
+                </div>
+                )}
             </div>
           </div>
 

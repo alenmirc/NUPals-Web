@@ -86,7 +86,15 @@ li {
 	list-style: none;
 }
 
+/* LOADING SPINNER */
+.loading-spinner{
 
+display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20vh; /* Full viewport height */
+
+}
 
 /* TABLE, SEARCH, BUTTON */
 .search-input {
@@ -112,6 +120,23 @@ li {
 
 /* END TABLE SEARCH BUTTON */
 
+
+/* UPDATE SADMIN PASSWORD  */
+
+.settings-container {
+	padding: 20px;
+  }
+
+.form-group {
+  margin-bottom: 20px; /* Space between form groups */
+}
+
+.form-group label {
+  display: block; /* Ensure label is on a new line */
+  margin-bottom: 5px; /* Space between label and input */
+}
+
+/* UPDATE SADMIN PASSWORD END */
 
 /* SIDEBAR */
 #sidebar {

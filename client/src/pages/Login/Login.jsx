@@ -77,7 +77,7 @@ export default function Login() {
                     </div>
                 </form>
                 <div className={styles.dont}>
-                    <p>tatanggalin wala na register forgotpass nalng <Link to="/"><span>Sign up</span></Link></p>
+                    <p><Link to="/forgotpassword"><span>Forgot Password?</span></Link></p>
                 </div>
             </div>
         </div>
