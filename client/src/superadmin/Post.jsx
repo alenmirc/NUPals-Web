@@ -179,7 +179,30 @@ const Post = () => {
     {
       title: 'Media',
       dataIndex: 'media',
-      render: media => media ? <img src={media} alt="Media" style={{ width: '50px', height: '50px' }} /> : 'No Media',
+      render: media => {
+  
+        if (!media) {
+          return 'No Media'; 
+        }
+        
+        // Check if the media is an image
+        if (media.startsWith('data:image/')) {
+          return (
+            <img src={media} alt="Media" style={{ width: '80px', height: 'auto' }} />
+          );
+        } 
+        // Check if the media is a video
+        else if (media.startsWith('data:video/')) { // This accepts any video format
+          return (
+            <video controls style={{ width: '80px', height: 'auto' }}>
+              <source src={media} type={media.split(';')[0].split(':')[1]} />
+              Your browser does not support the video tag.
+            </video>
+          );
+        }
+    
+        return 'Unsupported Media Type';
+      },
     },
     {
       title: 'Created At',
@@ -231,21 +254,21 @@ const Post = () => {
                   />
                 </div>
               </div>
-             {/* Show spinner while loading */}
-             {loading ? (
-                <div className="loading-spinner">
-                  <Spin tip="Loading posts..." />
-                </div>
-              ) : (
-                <div className="table-responsive">
-                  <Table
-                    columns={columns}
-                    dataSource={filteredPosts}
-                    rowKey="_id"
-                    pagination={{ pageSize: 10 }}
-                  />
-                </div>
-                )}
+            {/* Show spinner while loading */}
+{loading ? (
+  <div className="loading-spinner">
+    <Spin /> {/* Removed tip prop */}
+  </div>
+) : (
+  <div className="table-responsive">
+    <Table
+      columns={columns}
+      dataSource={filteredPosts}
+      rowKey="_id"
+      pagination={{ pageSize: 10 }}
+    />
+  </div>
+)}
             </div>
           </div>
 

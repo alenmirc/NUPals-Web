@@ -13,17 +13,23 @@ const ForgotPassword = () => {
   const [newPasswordModalVisible, setNewPasswordModalVisible] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
+   const [loading, setLoading] = useState(false); // State to track loading status
+  const navigate = useNavigate();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loading indicator
     try {
       await axios.post('/requestotp', { email });
       toast.success('OTP sent to your email.');
       setOtpModalVisible(true); // Show the OTP modal
+      
     } catch (error) {
       console.error('Error sending OTP:', error);
       const errorMessage = error.response?.data?.error || 'An unexpected error occurred';
       toast.error(errorMessage);
+    } finally {
+      setLoading(false); // Hide loading indicator
     }
   };
 
@@ -91,7 +97,7 @@ const ForgotPassword = () => {
               
             </div>
            
-            <Button type="primary" htmlType="submit" block>
+            <Button type="primary" htmlType="submit" block loading={loading}>
               Send OTP
             </Button>
           </form>

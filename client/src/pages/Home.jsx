@@ -75,49 +75,46 @@ const App = () => {
         </div>
       </header>
 
-      {/* Services */}
-      <section className={`${styles.pageSection} ${styles.whiteBackground} page-section`} id="services">
-        <div className="container">
-          <div className="text-center">
-            <h2 className={styles.sectionHeading}>Features</h2>
-            <h3 className={styles.sectionSubheading}>Explore what NUPals has to offer</h3>
-          </div>
-          <div className="row text-center">
-            <div className="col-md-4">
-              <span className="fa-stack fa-4x">
-                <i className="fas fa-circle fa-stack-2x text-primary"></i>
-                <i className="fas fa-user-friends fa-stack-1x fa-inverse"></i>
-              </span>
-              <h4 className="my-3">Student Matching</h4>
-              <p className="text-muted">Connect with fellow NU students based on shared interests and hobbies.</p>
-            </div>
-            <div className="col-md-4">
-              <span className="fa-stack fa-4x">
-                <i className="fas fa-circle fa-stack-2x text-primary"></i>
-                <i className="fas fa-comments fa-stack-1x fa-inverse"></i>
-              </span>
-              <h4 className="my-3">Instant Messaging</h4>
-              <p className="text-muted">Chat instantly with your matches and start building meaningful connections.</p>
-            </div>
-            <div className="col-md-4">
-              <span className="fa-stack fa-4x">
-                <i className="fas fa-circle fa-stack-2x text-primary"></i>
-                <i className="fas fa-shield-alt fa-stack-1x fa-inverse"></i>
-              </span>
-              <h4 className="my-3">Privacy & Security</h4>
-              <p className="text-muted">Your privacy is our priority. Rest assured your data is safe and secure.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+{/* Services */}
+<section className={`${styles.pageSection} ${styles.whiteBackground} page-section`} id="services">
+  <div className="container">
+    <div className="text-center">
+      <h2 className={styles.sectionHeading}>Features</h2>
+      <h3 className={styles.sectionSubheading}>Explore what NUPals has to offer</h3>
+    </div>
+    <div className="row text-center">
+      <div className="col-md-4">
+        <span className="fa-stack fa-4x">
+          <i className="bx bxs-group text-primary" style={{ fontSize: '7rem' }}></i>
+        </span>
+        <h4 className="my-3">Student Matching</h4>
+        <p className="text-muted">Connect with fellow NU students based on shared interests and hobbies.</p>
+      </div>
+      <div className="col-md-4">
+        <span className="fa-stack fa-4x">
+          <i className="bx bxs-message-rounded-detail text-primary" style={{ fontSize: '7rem' }}></i>
+        </span>
+        <h4 className="my-3">Instant Messaging</h4>
+        <p className="text-muted">Chat instantly with your matches and start building meaningful connections.</p>
+      </div>
+      <div className="col-md-4">
+        <span className="fa-stack fa-4x">
+          <i className="bx bxs-shield text-primary" style={{ fontSize: '7rem' }}></i>
+        </span>
+        <h4 className="my-3">Privacy & Security</h4>
+        <p className="text-muted">Your privacy is our priority. Rest assured your data is safe and secure.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* About */}
       <section className={`${styles.pageSection} ${styles.bgLight} page-section`} id="about">
         <div className="container">
           <div className="text-center">
             <h2 className={styles.sectionHeading}>About</h2>
-            <h3 className={styles.sectionSubheading}>NUPals is</h3>
-            <a className={`${styles.btnXl} btn btn-primary text-uppercase`} href="#services">Download Now</a>
+            <h3 className={styles.sectionSubheading}>NUPals is an exclusive social platform designed for NU students to foster collaboration and connection within the university community. With NUPals, students can match with others based on shared interests, opening up opportunities for academic partnerships, project collaborations, or simply making new friends. Our system allows you to explore common hobbies, skills, and activities while providing a secure space to message and connect with like-minded peers. </h3>
+            <a className={`${styles.btnXl} btn btn-primary text-uppercase`} href="#">Download Now</a>
           </div>
         
         </div>
@@ -127,8 +124,10 @@ const App = () => {
       <section className={`${styles.pageSection} ${styles.contactBackground} page-section`} id="contact">
         <div className="container">
           <div className="text-center">
-            <h2 className={styles.sectionHeading}>Contact Us</h2>
-            <h3 className={styles.sectionSubheading}>nupalsbulldogs@gmail.com</h3>
+          <h2 className={styles.sectionHeading} style={{ color: 'white' }}>Contact Us</h2>
+          <h3 className={styles.sectionSubheading} style={{ color: 'white', marginBottom: '7px' }}>nupalsbulldogs@outlook.com</h3>
+<h3 className={styles.sectionSubheading} style={{ color: 'white' }}>nupalsbulldogs@gmail.com</h3>
+
           </div>
 
         </div>

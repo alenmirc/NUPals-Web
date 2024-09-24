@@ -206,7 +206,7 @@ const getProfile = (req, res) => {
 }
 // Update profile function
 const updateProfile = async (req, res) => {
-    const { userId, firstName, lastName, department, skills, profilePicture } = req.body;
+    const { userId, firstName, lastName, profilePicture } = req.body;
   
     try {
       const user = await User.findById(userId);
@@ -218,8 +218,7 @@ const updateProfile = async (req, res) => {
       // Update user details
       user.firstName = firstName || user.firstName;
       user.lastName = lastName || user.lastName;
-      user.department = department || user.department;
-      user.skills = skills ? JSON.parse(skills) : user.skills;
+  
   
       // Update profile picture if provided
       if (profilePicture) {

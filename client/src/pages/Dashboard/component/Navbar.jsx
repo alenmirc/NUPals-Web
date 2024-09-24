@@ -16,6 +16,7 @@ const Navbar = () => {
   const { user, logout } = useContext(UserContext); // Get user info from context
   const userId = user?.id;
 
+  
   useEffect(() => {
     if (userId) {
       axios.get(`/getUserprofile?userId=${userId}`)

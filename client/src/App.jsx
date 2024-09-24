@@ -19,6 +19,7 @@ import Register from './pages/Login/Register';
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/Login/ForgotPassword';
 import Dashboard from './pages/Dashboard/Dashboard';
+import Settings from './pages/Dashboard/Settings';
 import Student from './pages/Dashboard/Student';
 import Post from './pages/Dashboard/Post';
 import Profile from './pages/Dashboard/Profile';
@@ -53,6 +54,7 @@ function App() {
       <Route path='/forgotpassword' element={<PublicRoute><ForgotPassword /></PublicRoute>} />
       <Route path='/register' element={<PublicRoute><Register /></PublicRoute>}/>
       <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>}/>
+      <Route path='/settings' element={<PrivateRoute><Settings /></PrivateRoute>}/>
       <Route path='/student' element={<PrivateRoute><Student /></PrivateRoute>}/>
       <Route path='/post' element={<PrivateRoute><Post /></PrivateRoute>}/>
       <Route path='/profile' element={<PrivateRoute><Profile /></PrivateRoute>}/>

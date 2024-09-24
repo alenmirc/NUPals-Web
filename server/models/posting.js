@@ -12,6 +12,14 @@ const userPostingSchema = new Schema({
     media: {
       type: String, // Update media type to String
       required: false
+    },
+    likes: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: []
+    },
+    comments: {
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      text: {type: String, required: true}
     }
   }, { timestamps: true });
 

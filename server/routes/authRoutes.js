@@ -4,7 +4,7 @@ const { test, registerUser, loginUser, logoutUser, getProfile, updateProfile, ge
 const { createUserPosting, getPost, getPostbyid, deletePost } = require('../controllers/userPostingController');
 const { getUsers, getAllpost, adminDeletepost, getLogs, editPost, updateUser, createUser, deleteUser, updateSAdminpassword  } = require('../controllers/adminController');
 const { requestOtp, verifyOtp } = require('../controllers/resetPassword');
-const { getCounts, getLoggedInUsersCount } = require('..//controllers/dashboardController'); // Adjust path as needed
+const { getCounts, getLoggedInUsersCount, getNewUsersOvertime, getMostLikedPosts, getMostCommentedPosts, getEngagementMetrics } = require('..//controllers/dashboardController'); // Adjust path as needed
 
 const bodyParser = require('body-parser');
 const multer = require('multer');
@@ -57,5 +57,11 @@ router.post('/verifyotp', verifyOtp);
 //dasboardController like counts
 router.get('/counts', getCounts);
 router.get('/getloggedin', getLoggedInUsersCount);
+router.get('/newusersovertime', getNewUsersOvertime);
+router.get('/getmostlikedposts', getMostLikedPosts);
+router.get('/getmostcommentedposts', getMostCommentedPosts);
+router.get('/getengagementmetrics', getEngagementMetrics);
+
 
 module.exports = router;
+getEngagementMetrics
