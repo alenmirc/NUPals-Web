@@ -17,10 +17,10 @@ const userPostingSchema = new Schema({
       type: [mongoose.Schema.Types.ObjectId],
       default: []
     },
-    comments: {
+    comments: [{
       userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
       text: {type: String, required: true}
-    }
+    }]
   }, { timestamps: true });
 
 const UserPostingModel = mongoose.model('Posts', userPostingSchema);

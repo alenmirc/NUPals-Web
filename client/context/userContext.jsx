@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export const UserContext = createContext({});
 
@@ -17,17 +18,21 @@ export function UserContextProvider({ children }) {
         console.log("Fetching user profile...");
         axios.get('/profile', { withCredentials: true })
             .then(({ data }) => {
-                console.log("Fetched user data:", data);
-                setUser(data || null); // Set user to null if no data is returned
+                if (!data) {
+                    // If no user data is returned, it may indicate session expiry
+                    toast.error('Session expired, please login again', { autoClose: 8000 });
+                } else {
+                    setUser(data);
+                }
             })
             .catch((error) => {
                 console.error("Error fetching profile data:", error);
+                toast.error('Session expired, please login again', { autoClose: 8000 });
             })
             .finally(() => {
-                setLoading(false);
-                console.log("Loading complete. User state:", user);
+                setLoading(false); // Set loading to false when request completes
             });
-    }, [user]); // Add user as a dependency
+    }, []);    
 
     const logout = () => {
         axios.post('/logout').then(() => {

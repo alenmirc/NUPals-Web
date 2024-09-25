@@ -75,6 +75,75 @@ const registerUser = async (req, res) => {
     }
   };
 
+  // CREATE STUDENT DITO
+const createStudent = async (req, res) => {
+  try {
+    const { firstName, lastName, email, password, confirmPassword } = req.body;
+
+    // CHECK IF FIRST NAME IS PROVIDED
+    if (!firstName) {
+      return res.json({ error: 'First Name is required' });
+    }
+
+    // CHECK IF LAST NAME IS PROVIDED
+    if (!lastName) {
+      return res.json({ error: 'Last Name is required' });
+    }
+
+    // CHECK IF PASSWORD IS VALID
+    if (!password || password.length < 6) {
+      return res.json({ error: 'Password is required and should be 6 characters long' });
+    }
+
+    if (password !== confirmPassword) {
+      return res.json({ error: 'Passwords do not match' });
+  }
+    // CHECK IF EMAIL ALREADY EXISTS
+    const exist = await User.findOne({ email });
+    if (exist) {
+      await Log.create({
+        level: 'warn',
+        message: `Failed registration attempt - email already taken`,
+        adminId: null, // No user ID since the registration failed
+        adminName: email, // Log the email used for the registration attempt
+      });
+      return res.json({ error: 'Email is already taken' });
+    }
+
+    // HASH PASSWORD
+    const hashedPassword = await hashPassword(password);
+
+    // CREATE NEW USER IN DATABASE
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      role: 'student', // Default role is 'admin'
+    });
+
+    // LOG SUCCESSFUL REGISTRATION
+    await Log.create({
+      level: 'info',
+      message: `New admin user created by superadmin`,
+      adminId: user._id, // Log the newly created user's ID
+      adminName: email,  // Log the user's email
+    });
+
+    return res.json(user);
+  } catch (error) {
+    // LOG SERVER ERROR
+    await Log.create({
+      level: 'error',
+      message: 'Internal server error during registration',
+      adminId: null, // No specific admin ID for system errors
+      adminName: 'unknown', // Log as 'unknown' since the error may not be tied to a specific user
+    });
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
   
 // LOGIN DITO
 const loginUser = async (req, res) => {
@@ -258,6 +327,7 @@ const getUserprofile = async (req, res) => {
 module.exports = {
     test,
     registerUser,
+    createStudent,
     loginUser,
     logoutUser,
     getProfile,

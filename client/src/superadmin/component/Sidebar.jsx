@@ -92,6 +92,12 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/super/comments" className={isActive('/super/comments') ? 'active' : ''}>
+              <i className='bx bxs-comment icon'></i> Comment Management
+            </Link>
+          </li>
+
+          <li>
             <Link to="/super/logs" className={isActive('/super/logs') ? 'active' : ''}>
               <i className='bx bxs-cog icon'></i> System Logs
             </Link>

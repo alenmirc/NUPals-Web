@@ -103,8 +103,7 @@ const Student = () => {
   };
  //end edit function
  
-  // create new admin user
-
+  // create new student user
   const [newUser, setNewUser] = useState({
     firstName: '',
     lastName: '',
@@ -119,7 +118,7 @@ const Student = () => {
     e.preventDefault();
     const { firstName, lastName, email, password, confirmPassword } = newUser; // Use newUser
     try {
-      const { data } = await axios.post('/register', {
+      const { data } = await axios.post('/createstudent', {
         firstName, lastName, email, password, confirmPassword // Ensure the endpoint matches your backend
       });
   

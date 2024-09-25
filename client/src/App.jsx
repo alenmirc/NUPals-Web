@@ -23,6 +23,7 @@ import Settings from './pages/Dashboard/Settings';
 import Student from './pages/Dashboard/Student';
 import Post from './pages/Dashboard/Post';
 import Profile from './pages/Dashboard/Profile';
+import Comments from './pages/Dashboard/Comments';
 
 import AdminDashboard from './superadmin/Dashboard';
 import AdminAdmin from './superadmin/Admin';
@@ -31,6 +32,7 @@ import AdminUsers from './superadmin/Users';
 import AdminLogs from './superadmin/Logs';
 import AdminPost from './superadmin/Post';
 import AdminSettings from './superadmin/Settings';
+import AdminComments from './superadmin/Comments';
 
 //axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.baseURL = 'https://nupals-web.onrender.com';
@@ -58,6 +60,7 @@ function App() {
       <Route path='/student' element={<PrivateRoute><Student /></PrivateRoute>}/>
       <Route path='/post' element={<PrivateRoute><Post /></PrivateRoute>}/>
       <Route path='/profile' element={<PrivateRoute><Profile /></PrivateRoute>}/>
+      <Route path='/comments' element={<PrivateRoute><Comments /></PrivateRoute>}/>
       <Route path='/template' element={<PrivateRoute><Template /></PrivateRoute>}/>
       
       <Route path='/super/dashboard' element={<AdminPrivateRoute><AdminDashboard /></AdminPrivateRoute>} />
@@ -67,6 +70,7 @@ function App() {
       <Route path='/super/logs' element={<AdminPrivateRoute><AdminLogs /></AdminPrivateRoute>} />
       <Route path='/super/post' element={<AdminPrivateRoute><AdminPost /></AdminPrivateRoute>} />
       <Route path='/super/settings' element={<AdminPrivateRoute><AdminSettings /></AdminPrivateRoute>} />
+      <Route path='/super/comments' element={<AdminPrivateRoute><AdminComments /></AdminPrivateRoute>} />
 
       </Routes>
       </UserContextProvider>

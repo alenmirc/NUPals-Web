@@ -18,8 +18,9 @@ const Logs = () => {
       setLoading(true); // Start loading
       const response = await axios.get('/getLogs');
       setLogs(response.data);
-      console.error('Error fetching Logs:', error);
-      toast.error('Error fetching Logs');
+    } catch (error) {
+      console.error('Error fetching Logs:', error); // Log the error
+      toast.error('Error fetching Logs'); // Show error notification
     } finally {
       setLoading(false); // End loading
     }

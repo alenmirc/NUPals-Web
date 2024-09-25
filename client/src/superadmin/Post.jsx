@@ -204,6 +204,7 @@ const Post = () => {
         return 'Unsupported Media Type';
       },
     },
+    
     {
       title: 'Created At',
       dataIndex: 'createdAt',

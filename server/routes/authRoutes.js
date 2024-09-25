@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { test, registerUser, loginUser, logoutUser, getProfile, updateProfile, getUserprofile} = require('../controllers/authController');
-const { createUserPosting, getPost, getPostbyid, deletePost } = require('../controllers/userPostingController');
+const { test, registerUser, createStudent, loginUser, logoutUser, getProfile, updateProfile, getUserprofile} = require('../controllers/authController');
+const { createUserPosting, getPost, getPostbyid, deletePost, deleteComment, getPostWithComments } = require('../controllers/userPostingController');
 const { getUsers, getAllpost, adminDeletepost, getLogs, editPost, updateUser, createUser, deleteUser, updateSAdminpassword  } = require('../controllers/adminController');
 const { requestOtp, verifyOtp } = require('../controllers/resetPassword');
 const { getCounts, getLoggedInUsersCount, getNewUsersOvertime, getMostLikedPosts, getMostCommentedPosts, getEngagementMetrics } = require('..//controllers/dashboardController'); // Adjust path as needed
@@ -25,6 +25,7 @@ const upload = multer({
 //usercontroller
 router.get('/', test);
 router.post('/register', registerUser); 
+router.post('/createStudent', createStudent); 
 router.post('/login', loginUser)
 router.post('/logout', authenticate, logoutUser)
 router.get('/profile', getProfile)
@@ -36,6 +37,8 @@ router.post('/createuserposting', upload.single('media'), createUserPosting);
 router.get('/getpost', getPost);
 router.get('/getpostbyid', getPostbyid);
 router.delete('/deletepost/:postId', deletePost);
+router.delete('/deletecomment/:commentId', deleteComment);
+router.get('/getpostwithcomments', getPostWithComments);
 
 //admin controller
 router.get('/getusers', getUsers);
