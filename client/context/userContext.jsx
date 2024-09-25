@@ -14,25 +14,30 @@ export function UserContextProvider({ children }) {
             setLoading(false);
             return; // Early exit if user is already defined
         }
-
+    
         console.log("Fetching user profile...");
         axios.get('/profile', { withCredentials: true })
             .then(({ data }) => {
                 if (!data) {
-                    // If no user data is returned, it may indicate session expiry
-                    toast.error('Session expired, please login again', { autoClose: 8000 });
-                } else {
-                    setUser(data);
+                    // No user data indicates an issue, but we shouldn't show an error yet
+                    return; // Early exit
                 }
+                setUser(data);
             })
             .catch((error) => {
                 console.error("Error fetching profile data:", error);
-                toast.error('Session expired, please login again', { autoClose: 8000 });
+                
+                // Check if the error response indicates that the session has expired
+                if (error.response && error.response.status === 401) {
+                    // Show session expired message only if 401 Unauthorized is returned
+                    toast.error('Session expired, please login again', { autoClose: 8000 });
+                }
             })
             .finally(() => {
                 setLoading(false); // Set loading to false when request completes
             });
-    }, []);    
+    }, [user]); // Added user as a dependency to trigger fetch when user is null
+    
 
     const logout = () => {
         axios.post('/logout').then(() => {
