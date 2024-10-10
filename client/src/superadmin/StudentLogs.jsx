@@ -16,7 +16,7 @@ const Logs = () => {
   const fetchLogs = async () => {
     try {
       setLoading(true); // Start loading
-      const response = await axios.get('/getLogs');
+      const response = await axios.get('/getstudentLogs');
       setLogs(response.data);
     } catch (error) {
       console.error('Error fetching Logs:', error); // Log the error
@@ -66,11 +66,11 @@ const Logs = () => {
       <section id="content">
         <Navbar />
         <main>
-          <h1 className="title">System Logs</h1>
+          <h1 className="title">Student Activity Logs</h1>
           <ul className="breadcrumbs">
             <li><a href="#">Home</a></li>
             <li className="divider">/</li>
-            <li><a href="#" className="active">System Logs</a></li>
+            <li><a href="#" className="active">Student Activity Logs</a></li>
           </ul>
 
           <div className="data">

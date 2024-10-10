@@ -5,7 +5,7 @@ const { createUserPosting, getPost, getPostbyid, deletePost, deleteComment, getP
 const { getUsers, getAllpost, adminDeletepost, getLogs, editPost, updateUser, createUser, deleteUser, updateSAdminpassword  } = require('../controllers/adminController');
 const { requestOtp, verifyOtp } = require('../controllers/resetPassword');
 const { getCounts, getLoggedInUsersCount, getNewUsersOvertime, getMostLikedPosts, getMostCommentedPosts, getEngagementMetrics } = require('..//controllers/dashboardController'); // Adjust path as needed
-
+const { getUpdates, createUpdate, deleteUpdate} = require('../controllers/updatesController');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const authenticate = require('../middleware/authenticate');
@@ -64,6 +64,11 @@ router.get('/newusersovertime', getNewUsersOvertime);
 router.get('/getmostlikedposts', getMostLikedPosts);
 router.get('/getmostcommentedposts', getMostCommentedPosts);
 router.get('/getengagementmetrics', getEngagementMetrics);
+
+//updatesController
+router.get('/getupdates', getUpdates);
+router.post('/createupdate', createUpdate);
+router.delete('/deleteupdate/:id', deleteUpdate);
 
 
 module.exports = router;

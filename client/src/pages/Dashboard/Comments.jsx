@@ -139,6 +139,7 @@ const Comments = () => {
           <Spin />
         </div>
       ) : (
+        <div className="table-responsive">
         <Table
           columns={columns}
           dataSource={filteredComments.map(comment => ({
@@ -147,7 +148,7 @@ const Comments = () => {
           }))}
           rowKey="_id"
           pagination={{ pageSize: 10 }}
-        />
+        /></div>
       )}
 
       <Modal

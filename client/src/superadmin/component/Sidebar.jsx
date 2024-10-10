@@ -83,23 +83,31 @@ const Sidebar = () => {
           </li>
           <li>
             <Link to="/super/student" className={isActive('/super/student') ? 'active' : ''}>
-              <i className='bx bxs-cog icon'></i> Student Management
+              <i className='bx bxs-id-card icon'></i> Student Management
             </Link>
           </li>
           <li>
             <Link to="/super/post" className={isActive('/super/post') ? 'active' : ''}>
-              <i className='bx bxs-widget icon'></i> Post Management
+              <i className='bx bxs-pencil icon'></i> Post Management
             </Link>
           </li>
           <li>
             <Link to="/super/comments" className={isActive('/super/comments') ? 'active' : ''}>
-              <i className='bx bxs-comment icon'></i> Comment Management
+              <i className='bx bxs-message-detail icon'></i> Comment Management
             </Link>
           </li>
-
           <li>
-            <Link to="/super/logs" className={isActive('/super/logs') ? 'active' : ''}>
-              <i className='bx bxs-cog icon'></i> System Logs
+            <Link to="/super/studentlogs" className={isActive('/super/studentlogs') ? 'active' : ''}>
+              <i className='bx bxs-book icon'></i> Student Activity
+            </Link>
+          </li> <li>
+            <Link to="/super/adminlogs" className={isActive('/super/adminlogs') ? 'active' : ''}>
+              <i className='bx bxs-user-check icon'></i> Admin Activty
+            </Link>
+          </li>
+          <li>
+            <Link to="/super/systemlogs" className={isActive('/super/systemlogs') ? 'active' : ''}>
+              <i className='bx bxs-cog icon'></i> System Update Logs
             </Link>
           </li>
         </ul>
