@@ -5,13 +5,13 @@ import Navbar from './component/Navbar';
 import Sidebar from './component/Sidebar';
 import './style.css'; 
 
-
 const { Search } = Input;
 
 const Logs = () => {
   const [logs, setLogs] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true); // Added loading state
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Initial check for mobile
 
   const fetchLogs = async () => {
     try {
@@ -28,6 +28,13 @@ const Logs = () => {
 
   useEffect(() => {
     fetchLogs();
+
+    // Update the isMobile state on window resize
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup listener on unmount
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const filteredLogs = logs.filter(log =>
@@ -35,30 +42,6 @@ const Logs = () => {
       typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
-
-  const columns = [
-    {
-      title: 'Level',
-      dataIndex: 'level',
-      sorter: (a, b) => a.level.localeCompare(b.level),
-    },
-    {
-      title: 'Message',
-      dataIndex: 'message',
-      sorter: (a, b) => a.message.localeCompare(b.message),
-    },
-    {
-      title: 'Admin Name',
-      dataIndex: 'adminName',
-      render: text => text || 'N/A',
-    },
-    {
-      title: 'Timestamp',
-      dataIndex: 'timestamp',
-      render: timestamp => new Date(timestamp).toLocaleString(),
-      sorter: (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
-    },
-  ];
 
   return (
     <div className="app">
@@ -86,20 +69,57 @@ const Logs = () => {
                   />
                 </div>
               </div>
-                {/* Show spinner while loading */}
-          {loading ? (
+              {/* Show spinner while loading */}
+              {loading ? (
                 <div className="loading-spinner">
-                  <Spin tip="Loading posts..." />
+                  <Spin tip="Loading logs..." />
                 </div>
               ) : (
-              <div className="table-responsive">
-              <Table
-                columns={columns}
-                dataSource={filteredLogs}
-                rowKey="_id"
-                pagination={{ pageSize: 10 }}
-                sorter={true}
-              /></div>
+                <div className="table-responsive">
+                  {isMobile ? (
+                    <div className="logs-list">
+                      {filteredLogs.map(log => (
+                        <div className="log-item" key={log._id}>
+                          <div><strong>Level:</strong> {log.level}</div>
+                          <div><strong>Message:</strong> {log.message}</div>
+                          <div><strong>Admin Name:</strong> {log.adminName || 'N/A'}</div>
+                          <div><strong>Timestamp:</strong> {new Date(log.timestamp).toLocaleString()}</div>
+                          <hr />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <Table
+                      columns={[
+                        {
+                          title: 'Level',
+                          dataIndex: 'level',
+                          sorter: (a, b) => a.level.localeCompare(b.level),
+                        },
+                        {
+                          title: 'Message',
+                          dataIndex: 'message',
+                          sorter: (a, b) => a.message.localeCompare(b.message),
+                        },
+                        {
+                          title: 'Admin Name',
+                          dataIndex: 'adminName',
+                          render: text => text || 'N/A',
+                        },
+                        {
+                          title: 'Timestamp',
+                          dataIndex: 'timestamp',
+                          render: timestamp => new Date(timestamp).toLocaleString(),
+                          sorter: (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
+                        },
+                      ]}
+                      dataSource={filteredLogs}
+                      rowKey="_id"
+                      pagination={{ pageSize: 10 }}
+                      bordered
+                    />
+                  )}
+                </div>
               )}
             </div>
           </div>

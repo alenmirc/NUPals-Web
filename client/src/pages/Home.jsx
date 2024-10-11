@@ -58,9 +58,10 @@ const App = () => {
          
           <div className="collapse navbar-collapse" id="navbarResponsive">
             <ul className={`navbar-nav text-uppercase ms-auto py-4 py-lg-0 ${styles.navbarNav}`}>
-              <li className={`${styles.navItem} nav-item`}><a className={`${styles.navLink} nav-link`} href="#services">Features</a></li>
+              <li className={`${styles.navItem} nav-item`}><a className={`${styles.navLink} nav-link`} href="#features">Features</a></li>
               <li className={`${styles.navItem} nav-item`}><a className={`${styles.navLink} nav-link`} href="#about">About</a></li>
               <li className={`${styles.navItem} nav-item`}><a className={`${styles.navLink} nav-link`} href="#contact">Contact</a></li>
+              <li className={`${styles.navItem} nav-item`}> <a className={`${styles.navLink} nav-link`} href="/login" style={{ color: 'yellow' }}> Login</a></li>
             </ul>
           </div>
         </div>
@@ -71,12 +72,12 @@ const App = () => {
         <div className="container">
           <div className={styles.mastheadSubheading}>Welcome to NUPals!</div>
           <div className={styles.mastheadHeading}>Discover Your Next Campus Connection</div>
-          <a className={`${styles.btnXl} btn btn-primary text-uppercase`} href="#services">Get Started</a>
+          <a className={`${styles.btnXl} btn btn-primary text-uppercase`} href="#">DOWNLOAD APK</a>
         </div>
       </header>
 
 {/* Services */}
-<section className={`${styles.pageSection} ${styles.whiteBackground} page-section`} id="services">
+<section className={`${styles.pageSection} ${styles.whiteBackground} page-section`} id="features">
   <div className="container">
     <div className="text-center">
       <h2 className={styles.sectionHeading}>Features</h2>
@@ -87,22 +88,28 @@ const App = () => {
         <span className="fa-stack fa-4x">
           <i className="bx bxs-group text-primary" style={{ fontSize: '7rem' }}></i>
         </span>
-        <h4 className="my-3">Student Matching</h4>
-        <p className="text-muted">Connect with fellow NU students based on shared interests and hobbies.</p>
-      </div>
-      <div className="col-md-4">
-        <span className="fa-stack fa-4x">
-          <i className="bx bxs-message-rounded-detail text-primary" style={{ fontSize: '7rem' }}></i>
-        </span>
-        <h4 className="my-3">Instant Messaging</h4>
-        <p className="text-muted">Chat instantly with your matches and start building meaningful connections.</p>
-      </div>
-      <div className="col-md-4">
-        <span className="fa-stack fa-4x">
-          <i className="bx bxs-shield text-primary" style={{ fontSize: '7rem' }}></i>
-        </span>
-        <h4 className="my-3">Privacy & Security</h4>
-        <p className="text-muted">Your privacy is our priority. Rest assured your data is safe and secure.</p>
+        <h4 className={`my-3 ${styles.fontMontserrat}`}>Student Matching</h4>
+  <p className={`text-muted ${styles.fontMontserrat}`}>
+    Connect with fellow NU students based on shared interests and hobbies.
+  </p>
+</div>
+<div className="col-md-4">
+  <span className="fa-stack fa-4x">
+    <i className="bx bxs-message-rounded-detail text-primary" style={{ fontSize: '7rem' }}></i>
+  </span>
+  <h4 className={`my-3 ${styles.fontMontserrat}`}>Instant Messaging</h4>
+  <p className={`text-muted ${styles.fontMontserrat}`}>
+    Chat instantly with your matches and start building meaningful connections.
+  </p>
+</div>
+<div className="col-md-4">
+  <span className="fa-stack fa-4x">
+    <i className="bx bxs-shield text-primary" style={{ fontSize: '7rem' }}></i>
+  </span>
+  <h4 className={`my-3 ${styles.fontMontserrat}`}>Privacy & Security</h4>
+  <p className={`text-muted ${styles.fontMontserrat}`}>
+    Your privacy is our priority. Rest assured your data is safe and secure.
+  </p>
       </div>
     </div>
   </div>
@@ -114,7 +121,6 @@ const App = () => {
           <div className="text-center">
             <h2 className={styles.sectionHeading}>About</h2>
             <h3 className={styles.sectionSubheading}>NUPals is an exclusive social platform designed for NU students to foster collaboration and connection within the university community. With NUPals, students can match with others based on shared interests, opening up opportunities for academic partnerships, project collaborations, or simply making new friends. Our system allows you to explore common hobbies, skills, and activities while providing a secure space to message and connect with like-minded peers. </h3>
-            <a className={`${styles.btnXl} btn btn-primary text-uppercase`} href="#">Download Now</a>
           </div>
         
         </div>
@@ -137,15 +143,17 @@ const App = () => {
       <footer className={`${styles.footer} footer py-4`}>
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-4 text-lg-start">Copyright &copy;NU Pals 2024</div>
+            <div className={"col-lg-4 text-lg-start  "}>Copyright &copy;NU Pals 2024</div>
             <div className="col-lg-4 my-3 my-lg-0">
               <a className={`btn ${styles.btnSocial} mx-2`} href="#!" aria-label="Twitter"><i className="fab fa-twitter"></i></a>
               <a className={`btn ${styles.btnSocial} mx-2`} href="#!" aria-label="Facebook"><i className="fab fa-facebook-f"></i></a>
               <a className={`btn ${styles.btnSocial} mx-2`} href="#!" aria-label="LinkedIn"><i className="fab fa-linkedin-in"></i></a>
             </div>
             <div className="col-lg-4 text-lg-end">
-              <a className="link-dark text-decoration-none me-3" href="#!">Privacy Policy</a>
-              <a className="link-dark text-decoration-none" href="#!">Terms of Use</a>
+            <a className={`text-decoration-none me-3 ${styles.fontMontserrat}`} href="#features">FEATURES</a>
+            <a className={`text-decoration-none me-3 ${styles.fontMontserrat}`} href="#about">ABOUT</a>
+              <a className={`text-decoration-none me-3 ${styles.fontMontserrat}`} href="#contact">CONTACT</a>
+              <a className={`text-decoration-none me-3 ${styles.fontMontserrat}`} href="/login">LOGIN</a>
             </div>
           </div>
         </div>

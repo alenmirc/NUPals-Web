@@ -96,6 +96,31 @@ display: flex;
 
 }
 
+/* responsive table */
+
+.logs-list {
+	padding: 10px;
+  }
+  
+  .log-item {
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	margin-bottom: 10px;
+  }
+  
+  .log-item strong {
+	display: inline-block;
+	margin-right: 5px;
+  }
+  
+  @media (max-width: 768px) {
+	.logs-list {
+	  font-size: 14px; /* Adjust font size for mobile */
+	}
+  }
+  
+  
 /* TABLE, SEARCH, BUTTON */
 .search-input {
 	width: 100%; /* Default to full width */
