@@ -85,6 +85,7 @@ const Post = () => {
 
   const handleEditSubmit = async () => {
     const formData = new FormData();
+    formData.append('userId', userId);
     formData.append('content', editContent);
     if (base64String) {
       formData.append('media', base64String);

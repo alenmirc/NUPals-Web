@@ -9,6 +9,7 @@ const userSchema = new Schema({
         unique: true
     },
     password: String,
+    username: String,
     role: String,
     profilePicture:  {
         type: String, // Update media type to String

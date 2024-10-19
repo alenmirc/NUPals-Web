@@ -1,6 +1,8 @@
 const Posts = require('../models/posting');
 const User = require('../models/user');
 const Log = require('../models/log'); // Import the Log model
+const studentlogs = require('../models/studentlogs');
+const surveyResponse = require('../models/surveyResponse');
 
 // Function to get counts
 const getCounts = async (req, res) => {
@@ -227,5 +229,79 @@ const getEngagementMetrics = async (req, res) => {
   }
 };
 
+// Get daily active users
+const getDailyActiveUsers = async (req, res) => {
+  try {
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
 
-module.exports = { getCounts, getLoggedInUsersCount, getNewUsersOvertime, getMostLikedPosts, getMostCommentedPosts, getEngagementMetrics };
+    const logs = await studentlogs.find({
+      timestamp: { $gte: startOfDay, $lte: endOfDay },
+      message: 'User logged in'
+    });
+
+    // Extract unique user IDs for active users
+    const activeUsers = [...new Set(logs.map(log => log.studentId.toString()))];
+    
+    // Return the count of unique active users
+    res.json({ dailyActiveUsers: activeUsers.length });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+//surveyresponse top interest categories
+// Get top 3 specific interests and top 3 categories
+const getTopInterestsAndCategories = async (req, res) => {
+  try {
+    // Aggregate the survey responses to count occurrences of each interest and category
+    const results = await surveyResponse.aggregate([
+      {
+        $unwind: '$analysisResult.specificInterests',
+      },
+      {
+        $group: {
+          _id: '$analysisResult.specificInterests',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      {
+        $limit: 3 ,
+      },
+    ]);
+
+    const topSpecificInterests = results.map(result => result._id);
+
+    const categoryResults = await surveyResponse.aggregate([
+      {
+        $unwind: '$analysisResult.topCategories',
+      },
+      {
+        $group: {
+          _id: '$analysisResult.topCategories',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      {
+        $limit: 3,
+      },
+    ]);
+
+    const topCategories = categoryResults.map(result => result._id);
+
+    res.json({ specificInterests: topSpecificInterests, topCategories });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = { getCounts, getLoggedInUsersCount, getNewUsersOvertime, getMostLikedPosts, getMostCommentedPosts, getEngagementMetrics, getDailyActiveUsers, getTopInterestsAndCategories  };

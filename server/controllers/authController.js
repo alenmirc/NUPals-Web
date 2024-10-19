@@ -6,143 +6,162 @@ const test = (req, res) => {
     res.json('test is working');
 };
 
-// REGISTER ENDPOINT DITO (NEW USER CREATE BY SUPERADMIN)
-const registerUser = async (req, res) => {
-    try {
-      const { firstName, lastName, email, password, confirmPassword } = req.body;
-  
-      // CHECK IF FIRST NAME IS PROVIDED
-      if (!firstName) {
-        return res.json({ error: 'First Name is required' });
+  // REGISTER ENDPOINT DITO (NEW USER CREATE BY SUPERADMIN)
+  const registerUser = async (req, res) => {
+      try {
+        const { firstName, lastName, email, password, confirmPassword } = req.body;
+    
+        // CHECK IF FIRST NAME IS PROVIDED
+        if (!firstName) {
+          return res.json({ error: 'First Name is required' });
+        }
+    
+        // CHECK IF LAST NAME IS PROVIDED
+        if (!lastName) {
+          return res.json({ error: 'Last Name is required' });
+        }
+    
+        // CHECK IF PASSWORD IS VALID
+        if (!password || password.length < 6) {
+          return res.json({ error: 'Password is required and should be 6 characters long' });
+        }
+    
+        if (password !== confirmPassword) {
+          return res.json({ error: 'Passwords do not match' });
       }
-  
-      // CHECK IF LAST NAME IS PROVIDED
-      if (!lastName) {
-        return res.json({ error: 'Last Name is required' });
-      }
-  
-      // CHECK IF PASSWORD IS VALID
-      if (!password || password.length < 6) {
-        return res.json({ error: 'Password is required and should be 6 characters long' });
-      }
-  
-      if (password !== confirmPassword) {
-        return res.json({ error: 'Passwords do not match' });
-    }
-      // CHECK IF EMAIL ALREADY EXISTS
-      const exist = await User.findOne({ email });
-      if (exist) {
-        await Log.create({
-          level: 'warn',
-          message: `Failed registration attempt - email already taken`,
-          adminId: null, // No user ID since the registration failed
-          adminName: email, // Log the email used for the registration attempt
+        // CHECK IF EMAIL ALREADY EXISTS
+        const exist = await User.findOne({ email });
+        if (exist) {
+          await Log.create({
+            level: 'warn',
+            message: `Failed registration attempt - email already taken`,
+            adminId: null, // No user ID since the registration failed
+            adminName: email, // Log the email used for the registration attempt
+          });
+          return res.json({ error: 'Email is already taken' });
+        }
+    
+        // HASH PASSWORD
+        const hashedPassword = await hashPassword(password);
+    
+        // CREATE NEW USER IN DATABASE
+        const user = await User.create({
+          firstName,
+          lastName,
+          email,
+          password: hashedPassword,
+          role: 'admin', // Default role is 'admin'
         });
-        return res.json({ error: 'Email is already taken' });
+    
+        // LOG SUCCESSFUL REGISTRATION
+        await Log.create({
+          level: 'info',
+          message: `New admin account created by superadmin`,
+          adminId: user._id, // Log the newly created user's ID
+          adminName: email,  // Log the user's email
+        });
+    
+        return res.json(user);
+      } catch (error) {
+        // LOG SERVER ERROR
+        await Log.create({
+          level: 'error',
+          message: 'Internal server error during registration',
+          adminId: null, // No specific admin ID for system errors
+          adminName: 'unknown', // Log as 'unknown' since the error may not be tied to a specific user
+        });
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
       }
-  
-      // HASH PASSWORD
-      const hashedPassword = await hashPassword(password);
-  
-      // CREATE NEW USER IN DATABASE
-      const user = await User.create({
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-        role: 'admin', // Default role is 'admin'
-      });
-  
-      // LOG SUCCESSFUL REGISTRATION
-      await Log.create({
-        level: 'info',
-        message: `New admin user created by superadmin`,
-        adminId: user._id, // Log the newly created user's ID
-        adminName: email,  // Log the user's email
-      });
-  
-      return res.json(user);
-    } catch (error) {
-      // LOG SERVER ERROR
-      await Log.create({
-        level: 'error',
-        message: 'Internal server error during registration',
-        adminId: null, // No specific admin ID for system errors
-        adminName: 'unknown', // Log as 'unknown' since the error may not be tied to a specific user
-      });
-      console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  };
+    };
 
-  // CREATE STUDENT DITO
-const createStudent = async (req, res) => {
-  try {
-    const { firstName, lastName, email, password, confirmPassword } = req.body;
-
-    // CHECK IF FIRST NAME IS PROVIDED
-    if (!firstName) {
-      return res.json({ error: 'First Name is required' });
-    }
-
-    // CHECK IF LAST NAME IS PROVIDED
-    if (!lastName) {
-      return res.json({ error: 'Last Name is required' });
-    }
-
-    // CHECK IF PASSWORD IS VALID
-    if (!password || password.length < 6) {
-      return res.json({ error: 'Password is required and should be 6 characters long' });
-    }
-
-    if (password !== confirmPassword) {
-      return res.json({ error: 'Passwords do not match' });
-  }
-    // CHECK IF EMAIL ALREADY EXISTS
-    const exist = await User.findOne({ email });
-    if (exist) {
-      await Log.create({
-        level: 'warn',
-        message: `Failed registration attempt - email already taken`,
-        adminId: null, // No user ID since the registration failed
-        adminName: email, // Log the email used for the registration attempt
-      });
-      return res.json({ error: 'Email is already taken' });
-    }
-
-    // HASH PASSWORD
-    const hashedPassword = await hashPassword(password);
-
-    // CREATE NEW USER IN DATABASE
-    const user = await User.create({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-      role: 'student', // Default role is 'admin'
-    });
-
-    // LOG SUCCESSFUL REGISTRATION
-    await Log.create({
-      level: 'info',
-      message: `New admin user created by superadmin`,
-      adminId: user._id, // Log the newly created user's ID
-      adminName: email,  // Log the user's email
-    });
-
-    return res.json(user);
-  } catch (error) {
-    // LOG SERVER ERROR
-    await Log.create({
-      level: 'error',
-      message: 'Internal server error during registration',
-      adminId: null, // No specific admin ID for system errors
-      adminName: 'unknown', // Log as 'unknown' since the error may not be tied to a specific user
-    });
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
+    const createStudent = async (req, res) => {
+      try {
+        const { firstName, lastName, email, username, password, confirmPassword } = req.body;
+    
+        // CHECK IF FIRST NAME IS PROVIDED
+        if (!firstName) {
+          return res.json({ error: 'First Name is required' });
+        }
+    
+        // CHECK IF LAST NAME IS PROVIDED
+        if (!lastName) {
+          return res.json({ error: 'Last Name is required' });
+        }
+    
+        // CHECK IF USERNAME IS VALID
+        if (!username) {
+          return res.json({ error: 'Username is required' });
+        }
+    
+        // CHECK IF PASSWORD IS VALID
+        if (!password || password.length < 6) {
+          return res.json({ error: 'Password is required and should be 6 characters long' });
+        }
+    
+        if (password !== confirmPassword) {
+          return res.json({ error: 'Passwords do not match' });
+        }
+    
+        // CHECK IF EMAIL ALREADY EXISTS
+        const emailExists = await User.findOne({ email });
+        if (emailExists) {
+          await Log.create({
+            level: 'warn',
+            message: `Failed create Student attempt - email already taken`,
+            adminId: null,
+            adminName: req.user.email,
+          });
+          return res.json({ error: 'Email is already taken' });
+        }
+    
+        // CHECK IF USERNAME ALREADY EXISTS
+        const usernameExists = await User.findOne({ username });
+        if (usernameExists) {
+          await Log.create({
+            level: 'warn',
+            message: `Failed create Student attempt - username already taken`,
+            adminId: null,
+            adminName: req.user.email,
+          });
+          return res.json({ error: 'Username is already taken' });
+        }
+    
+        // HASH PASSWORD
+        const hashedPassword = await hashPassword(password);
+    
+        // CREATE NEW USER IN DATABASE
+        const user = await User.create({
+          firstName,
+          lastName,
+          email,
+          username, // Add the username to the new user
+          password: hashedPassword,
+          role: 'student', // Default role is 'student'
+        });
+    
+        // LOG SUCCESSFUL REGISTRATION
+        await Log.create({
+          level: 'info',
+          message: `New student account created by superadmin`,
+          adminId: req.user._id,
+          adminName: req.user.email,
+        });
+    
+        return res.json(user);
+      } catch (error) {
+        // LOG SERVER ERROR
+        await Log.create({
+          level: 'error',
+          message: 'Internal server error during create student',
+          adminId: req.user._id,
+          adminName: req.user.email,
+        });
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    };
+    
 
   
 // LOGIN DITO
@@ -189,7 +208,7 @@ const loginUser = async (req, res) => {
     jwt.sign(
       { email: user.email, id: user._id, firstName: user.firstName, lastName: user.lastName, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' },
+      { expiresIn: '10m' },
       (err, token) => {
         if (err) {
           console.error('JWT sign error:', err);
@@ -296,12 +315,30 @@ const updateProfile = async (req, res) => {
       }
   
       await user.save();
-  
+
+    // Log the profile update action
+    await Log.create({
+      level: 'info',
+      message: `Profile updated for user ${user.email}`,
+      adminId: user._id, // Log the user's ID
+      adminName: user.email, // Log the email
+    });
+
+
       res.status(200).json({ message: 'Profile updated successfully', user });
     } catch (error) {
-      res.status(500).json({ message: 'Error updating profile', error });
-    }
-  };
+    // Log the error
+    await Log.create({
+      level: 'error',
+      message: 'Error updating profile',
+      adminId: user._id, // Log the user's ID if available
+      adminName: user.email, // Log the email if available
+      error: error.message, // Log the error message
+    });
+
+    res.status(500).json({ message: 'Error updating profile', error });
+  }
+};
 
 //get userprofile
 const getUserprofile = async (req, res) => {

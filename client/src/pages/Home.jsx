@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import styles from './home.module.css'; // Updated import
+import styles from './home.module.css';
 import Logo from '../assets/logo.png';
 
 const App = () => {
   useEffect(() => {
+    console.log('useEffect ran');
+
     // Navbar shrink function
     const navbarShrink = () => {
       const navbarCollapsible = document.querySelector('#mainNav');
@@ -23,18 +25,22 @@ const App = () => {
     // Shrink the navbar when page is scrolled
     document.addEventListener('scroll', navbarShrink);
 
-    // Navbar toggler and responsive nav items
+    // Toggler selection
     const navbarToggler = document.querySelector(`.${styles.navbarToggler}`);
+    console.log(navbarToggler); // Should log the toggler element
+
+    // Define handleNavItemClick
+    const handleNavItemClick = () => {
+      console.log('Nav item clicked'); // Debug log
+      if (navbarToggler) {
+        navbarToggler.click(); // Toggle if visible
+      }
+    };
+
+    // Responsive nav items
     const responsiveNavItems = Array.from(
       document.querySelectorAll(`#navbarResponsive .${styles.navLink}`)
     );
-
-    // Click handler function
-    const handleNavItemClick = () => {
-      if (window.getComputedStyle(navbarToggler).display !== 'none') {
-        navbarToggler.click();
-      }
-    };
 
     // Add event listener to each responsive nav item
     responsiveNavItems.forEach((item) => item.addEventListener('click', handleNavItemClick));
@@ -49,23 +55,32 @@ const App = () => {
   return (
     <div id="page-top" className={styles.pageTop}>
       {/* Navigation */}
-      <nav className={`${styles.mainNav} navbar navbar-expand-lg navbar-dark fixed-top`} id="mainNav">
+      <nav className={`navbar navbar-expand-lg navbar-dark fixed-top ${styles.mainNav}`} id="mainNav">
         <div className="container">
-          <a className={`navbar-brand d-flex align-items-center ${styles.navbarBrand}`} href="#page-top">
+          <a className={`navbar-brand ${styles.navbarBrand}`} href="#page-top">
             <img src={Logo} alt="logo" style={{ height: '40px', marginRight: '10px' }} />
             NUPals
           </a>
-         
+
+          <button className={`navbar-toggler ${styles.navbarToggler}`} onClick={() => window.location.href = '/login'} aria-label="Login">
+  <span>Login</span>
+</button>
+
           <div className="collapse navbar-collapse" id="navbarResponsive">
             <ul className={`navbar-nav text-uppercase ms-auto py-4 py-lg-0 ${styles.navbarNav}`}>
-              <li className={`${styles.navItem} nav-item`}><a className={`${styles.navLink} nav-link`} href="#features">Features</a></li>
-              <li className={`${styles.navItem} nav-item`}><a className={`${styles.navLink} nav-link`} href="#about">About</a></li>
-              <li className={`${styles.navItem} nav-item`}><a className={`${styles.navLink} nav-link`} href="#contact">Contact</a></li>
-              <li className={`${styles.navItem} nav-item`}> <a className={`${styles.navLink} nav-link`} href="/login" style={{ color: 'yellow' }}> Login</a></li>
+              <li className={`nav-item ${styles.navItem}`}><a className={`nav-link ${styles.navLink}`} href="#features">Features</a></li>
+              <li className={`nav-item ${styles.navItem}`}><a className={`nav-link ${styles.navLink}`} href="#about">About</a></li>
+              <li className={`nav-item ${styles.navItem}`}><a className={`nav-link ${styles.navLink}`} href="#contact">Contact</a></li>
+              <li className={`nav-item ${styles.navItem}`}>
+  <a className={`nav-link ${styles.navLink} btn btn-primary`} href="/login" style={{ color: 'yellow' }}>Login</a>
+</li>
             </ul>
+            
+
           </div>
         </div>
       </nav>
+
 
       {/* Masthead */}
       <header className={styles.headerMasthead}>
@@ -138,7 +153,7 @@ const App = () => {
 
         </div>
       </section>
-
+ 
       {/* Footer */}
       <footer className={`${styles.footer} footer py-4`}>
         <div className="container">

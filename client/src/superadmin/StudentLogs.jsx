@@ -16,7 +16,7 @@ const Logs = () => {
   const fetchLogs = async () => {
     try {
       setLoading(true); // Start loading
-      const response = await axios.get('/getstudentLogs');
+      const response = await axios.get('/getstudentlogs');
       setLogs(response.data);
     } catch (error) {
       console.error('Error fetching Logs:', error); // Log the error
@@ -48,8 +48,8 @@ const Logs = () => {
       sorter: (a, b) => a.message.localeCompare(b.message),
     },
     {
-      title: 'Admin Name',
-      dataIndex: 'adminName',
+      title: 'Student Email',
+      dataIndex: 'studentName',
       render: text => text || 'N/A',
     },
     {
