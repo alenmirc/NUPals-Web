@@ -62,7 +62,12 @@ const App = () => {
             NUPals
           </a>
 
-          <button className={`navbar-toggler ${styles.navbarToggler}`} onClick={() => window.location.href = '/login'} aria-label="Login">
+          <button
+  className={`btn ${styles.mobileButton}`}
+  style={{ backgroundColor: '#2a3439', color: 'yellow' }} // Set background color to dark gray
+  onClick={() => window.location.href = '/login'}
+  aria-label="Login"
+>
   <span>Login</span>
 </button>
 

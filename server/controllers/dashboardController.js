@@ -233,24 +233,43 @@ const getEngagementMetrics = async (req, res) => {
 const getDailyActiveUsers = async (req, res) => {
   try {
     const today = new Date();
-    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    const startOfWeek = new Date(today.setDate(today.getDate() - 6)); // Start date for the last 7 days
+    startOfWeek.setHours(0, 0, 0, 0); // Set to the start of the day
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999); // End of today
 
     const logs = await studentlogs.find({
-      timestamp: { $gte: startOfDay, $lte: endOfDay },
+      timestamp: { $gte: startOfWeek, $lte: endOfDay },
       message: 'User logged in'
     });
 
-    // Extract unique user IDs for active users
-    const activeUsers = [...new Set(logs.map(log => log.studentId.toString()))];
-    
-    // Return the count of unique active users
-    res.json({ dailyActiveUsers: activeUsers.length });
+    // Extract unique user IDs per day
+    const activeUsersByDay = {};
+
+    logs.forEach(log => {
+      const date = new Date(log.timestamp);
+      const day = date.toISOString().split('T')[0]; // Format date as 'YYYY-MM-DD'
+
+      if (!activeUsersByDay[day]) {
+        activeUsersByDay[day] = new Set(); // Create a Set to store unique user IDs for the day
+      }
+      activeUsersByDay[day].add(log.studentId.toString());
+    });
+
+    // Create a report of daily active users
+    const weeklyReport = Object.keys(activeUsersByDay).map(day => ({
+      date: day,
+      activeUsers: activeUsersByDay[day].size // Number of unique active users
+    }));
+
+    res.json({ weeklyActiveUsers: weeklyReport });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 //surveyresponse top interest categories
 // Get top 3 specific interests and top 3 categories

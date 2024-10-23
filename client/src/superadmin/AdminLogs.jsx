@@ -99,6 +99,11 @@ const Logs = () => {
                         {
                           title: 'Message',
                           dataIndex: 'message',
+                          render: (text) => (
+                            <div style={{ maxHeight: '100px', overflowY: 'auto', whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                              {text}
+                            </div>
+                          ),
                           sorter: (a, b) => a.message.localeCompare(b.message),
                         },
                         {

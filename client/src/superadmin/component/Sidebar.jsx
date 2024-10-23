@@ -97,6 +97,16 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/super/message" className={isActive('/super/message') ? 'active' : ''}>
+              <i className='bx bxs-message-detail icon'></i> Message Management
+            </Link>
+          </li>
+          <li>
+            <Link to="/super/groupmessage" className={isActive('/super/groupmessage') ? 'active' : ''}>
+              <i className='bx bxs-message-detail icon'></i> Group Message
+            </Link>
+          </li>
+          <li>
             <Link to="/super/studentlogs" className={isActive('/super/studentlogs') ? 'active' : ''}>
               <i className='bx bxs-book icon'></i> Student Activity
             </Link>

@@ -208,7 +208,7 @@ const loginUser = async (req, res) => {
     jwt.sign(
       { email: user.email, id: user._id, firstName: user.firstName, lastName: user.lastName, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: '10m' },
+      { expiresIn: '120m' },
       (err, token) => {
         if (err) {
           console.error('JWT sign error:', err);

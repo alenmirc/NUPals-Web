@@ -3,7 +3,16 @@
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+.mobileButton {
+  display: none; /* Hide by default */
+}
 
+@media (max-width: 768px) { /* Adjust max-width as necessary */
+  .mobileButton {
+    display: inline-block; /* Show on mobile */
+    margin-bottom: 20px; /* Add margin bottom as needed */
+  }
+}
 
 .contactBackground {
   background-image: url('../assets/homecontact.png'); /* Adjust the path as needed */
@@ -104,6 +113,7 @@
   border: var(--bs-border-width) solid var(--bs-navbar-toggler-border-color);
   border-radius: var(--bs-navbar-toggler-border-radius);
   transition: var(--bs-navbar-toggler-transition);
+  
 }
 .navbarTogglerReducedMotion {
   transition: none;

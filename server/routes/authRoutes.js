@@ -3,6 +3,8 @@ const router = express.Router();
 const { test, registerUser, createStudent, loginUser, logoutUser, getProfile, updateProfile, getUserprofile} = require('../controllers/authController');
 const { createUserPosting, getPost, getPostbyid, deletePost, deleteComment, getPostWithComments } = require('../controllers/userPostingController');
 const { getUsers, getAllpost, adminDeletepost, editPost, updateUser, createUser, deleteUser, updateSAdminpassword,  getLogs, getStudentLogs  } = require('../controllers/adminController');
+const { getMessages, deleteMessage, getUserIdByEmail, logLegalReason, fetchGroupMessages, fetchAllGroupChats, deleteGroupMessage } = require('../controllers/messageController');
+const { viewGroupChats, createGroupChat, updateGroupChat, deleteGroupChat } = require('../controllers/groupChatController');
 const { requestOtp, verifyOtp } = require('../controllers/resetPassword');
 const { getCounts, getLoggedInUsersCount, getNewUsersOvertime, getMostLikedPosts, getMostCommentedPosts, getEngagementMetrics, getDailyActiveUsers, getTopInterestsAndCategories } = require('..//controllers/dashboardController'); // Adjust path as needed
 const { getUpdates, createUpdate, deleteUpdate} = require('../controllers/updatesController');
@@ -52,6 +54,20 @@ router.put('/updatesadminpassword', updateSAdminpassword);
 router.get('/getlogs', getLogs);
 router.get('/getstudentlogs', getStudentLogs);
 
+//group chats
+router.get('/viewGroupChats', viewGroupChats);
+router.post('/createGroupChat', authenticate, createGroupChat);
+router.put('/updateGroupChat/:id', authenticate, updateGroupChat);
+router.delete('/deleteGroupChat/:id', authenticate, deleteGroupChat);
+
+//messagesController
+router.get('/getmessages', getMessages);
+router.delete('/deletemessage/:messageId', authenticate, deleteMessage);
+router.get('/getUserIdByEmail', getUserIdByEmail);
+router.post('/logLegalReason', authenticate, logLegalReason);
+router.get('/groupMessages/:groupId', authenticate, fetchGroupMessages);
+router.get('/groupChats', fetchAllGroupChats);
+router.delete('/deleteGroupMessage/:messageId', authenticate, deleteGroupMessage);
 
 //resetPassword controller
 router.post('/requestotp', requestOtp);
@@ -74,5 +90,5 @@ router.post('/createupdate', createUpdate);
 router.delete('/deleteupdate/:id', deleteUpdate);
 
 
+
 module.exports = router;
-getEngagementMetrics
