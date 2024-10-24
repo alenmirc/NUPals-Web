@@ -24,6 +24,9 @@ import Student from './pages/Dashboard/Student';
 import Post from './pages/Dashboard/Post';
 import Profile from './pages/Dashboard/Profile';
 import Comments from './pages/Dashboard/Comments';
+import Reports from './pages/Dashboard/Reports';
+import Feedback from './pages/Dashboard/Feedback';
+import StudentLogs from './pages/Dashboard/StudentLogs';
 
 import AdminDashboard from './superadmin/Dashboard';
 import AdminAdmin from './superadmin/Admin';
@@ -69,7 +72,12 @@ function App() {
       <Route path='/profile' element={<PrivateRoute><Profile /></PrivateRoute>}/>
       <Route path='/comments' element={<PrivateRoute><Comments /></PrivateRoute>}/>
       <Route path='/template' element={<PrivateRoute><Template /></PrivateRoute>}/>
-      
+      <Route path='/comments' element={<PrivateRoute><Comments /></PrivateRoute>}/>
+      <Route path='/studentlogs' element={<PrivateRoute><StudentLogs /></PrivateRoute>}/>
+      <Route path='/reports' element={<PrivateRoute><Reports /></PrivateRoute>}/>
+      <Route path='/feedback' element={<PrivateRoute><Feedback /></PrivateRoute>}/>
+
+
       <Route path='/super/dashboard' element={<AdminPrivateRoute><AdminDashboard /></AdminPrivateRoute>} />
       <Route path='/super/admin' element={<AdminPrivateRoute><AdminAdmin /></AdminPrivateRoute>} />
       <Route path='/super/student' element={<AdminPrivateRoute><AdminStudent /></AdminPrivateRoute>} />

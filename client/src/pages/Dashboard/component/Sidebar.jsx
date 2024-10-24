@@ -1,16 +1,34 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState} from 'react';
 import Logo from '../../../assets/logo.png';
 import { useLocation, Link } from 'react-router-dom';
+import { FaTachometerAlt, FaIdCard, FaPencilAlt, FaComments, FaClipboardList } from 'react-icons/fa'; // Import new icons from react-icons
+import axios from 'axios';
+import { Badge } from 'antd'; // Import Badge from antd
 
 const Sidebar = () => {
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const [feedbackCount, setFeedbackCount] = useState(0);
+  const [reportCount, setReportCount] = useState(0);
 
   useEffect(() => {
     const sidebar = sidebarRef.current;
     const allDropdown = sidebar.querySelectorAll('.side-dropdown');
     const toggleSidebar = document.querySelector('nav .toggle-sidebar');
     const allSideDivider = sidebar.querySelectorAll('.divider');
+
+    const fetchCounts = async () => {
+      try {
+        const response = await axios.get('/getFeedbackReportCount');
+        const data = response.data; 
+        setFeedbackCount(data.feedbackCount);
+        setReportCount(data.reportCount);
+      } catch (error) {
+        console.error('Error fetching counts:', error);
+      }
+    };
+    
+    fetchCounts();
 
     const handleClickDropdown = (e) => {
       e.preventDefault();
@@ -60,8 +78,8 @@ const Sidebar = () => {
     };
   }, []);
 
-   // Function to check if the current route matches the link's href
-   const isActive = (path) => location.pathname === path;
+  // Function to check if the current route matches the link's href
+  const isActive = (path) => location.pathname === path;
 
   return (
     <section id="sidebar" ref={sidebarRef}>
@@ -72,30 +90,44 @@ const Sidebar = () => {
         <ul className="side-menu">
           <li>
             <Link to="/dashboard" className={isActive('/dashboard') ? 'active' : ''}>
-              <i className='bx bxs-dashboard icon'></i> Dashboard
+            <FaTachometerAlt className="icon" />Dashboard
             </Link>
           </li>
           <li className="divider" data-text="main">Main</li>
           <li>
             <Link to="/student" className={isActive('/student') ? 'active' : ''}>
-              <i className='bx bxs-cog icon'></i> Student Management
+            <FaIdCard className="icon" /> Student Management
             </Link>
           </li>
           <li>
             <Link to="/post" className={isActive('/post') ? 'active' : ''}>
-              <i className='bx bxs-widget icon'></i> Post Management
+            <FaPencilAlt className="icon" /> Post Management
             </Link>
           </li>
           <li>
             <Link to="/comments" className={isActive('/comments') ? 'active' : ''}>
-              <i className='bx bxs-comment icon'></i> Comment Management
+            <FaComments className="icon" /> Comment Management
             </Link>
           </li>
-          <li>
-            <Link to="/logs" className={isActive('/logs') ? 'active' : ''}>
-              <i className='bx bxs-cog icon'></i> System Logs
-            </Link>
-          </li>
+          <li className="divider" data-text="main">Reports & Feedback</li>
+        <li>
+          <Link to="/reports" className={isActive('/reports') ? 'active' : ''}>
+            <FaClipboardList className="icon" /> Reports
+            <Badge count={reportCount} style={{ marginLeft: 5 }} />
+          </Link>
+        </li>
+        <li>
+          <Link to="/feedback" className={isActive('/feedback') ? 'active' : ''}>
+            <FaComments className="icon" /> Feedback
+
+          </Link>
+        </li>
+          <li className="divider" data-text="main">Logs</li>
+        <li>
+          <Link to="/studentlogs" className={isActive('/studentlogs') ? 'active' : ''}>
+            <i className='bx bxs-book icon'></i> Student Activity
+          </Link>
+        </li>
         </ul>
       </section>
   );

@@ -86,6 +86,7 @@ const Post = () => {
 
   const handleEditSubmit = async () => {
     const formData = new FormData();
+    formData.append('userId', userId);
     formData.append('content', editContent);
     if (base64String) {
       formData.append('media', base64String);
@@ -181,8 +182,7 @@ const Post = () => {
       title: 'Media',
       dataIndex: 'media',
       render: media => {
-    
-        
+  
         if (!media) {
           return 'No Media'; 
         }
@@ -206,6 +206,7 @@ const Post = () => {
         return 'Unsupported Media Type';
       },
     },
+    
     {
       title: 'Created At',
       dataIndex: 'createdAt',
@@ -256,21 +257,21 @@ const Post = () => {
                   />
                 </div>
               </div>
-             {/* Show spinner while loading */}
-             {loading ? (
-                <div className="loading-spinner">
-                  <Spin tip="Loading posts..." />
-                </div>
-              ) : (
-                <div className="table-responsive">
-                  <Table
-                    columns={columns}
-                    dataSource={filteredPosts}
-                    rowKey="_id"
-                    pagination={{ pageSize: 10 }}
-                  />
-                </div>
-                )}
+            {/* Show spinner while loading */}
+{loading ? (
+  <div className="loading-spinner">
+    <Spin /> {/* Removed tip prop */}
+  </div>
+) : (
+  <div className="table-responsive">
+    <Table
+      columns={columns}
+      dataSource={filteredPosts}
+      rowKey="_id"
+      pagination={{ pageSize: 10 }}
+    />
+  </div>
+)}
             </div>
           </div>
 

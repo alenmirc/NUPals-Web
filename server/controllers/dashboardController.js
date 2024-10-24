@@ -3,6 +3,9 @@ const User = require('../models/user');
 const Log = require('../models/log'); // Import the Log model
 const studentlogs = require('../models/studentlogs');
 const surveyResponse = require('../models/surveyResponse');
+const Feedback = require('../models/feedback'); // Your Feedback model
+const Report = require('../models/report');     // Your Report model
+
 
 // Function to get counts
 const getCounts = async (req, res) => {
@@ -12,6 +15,8 @@ const getCounts = async (req, res) => {
     const logCount = await Log.countDocuments();
     const adminCount = await User.countDocuments({ role: 'admin' });
     const studentCount = await User.countDocuments({ role: 'student' });
+    const feedbackCount = await Feedback.countDocuments();
+    const reportCount = await Report.countDocuments();
 
     // Get today's date and start of the day
     const startOfToday = new Date();
@@ -30,6 +35,8 @@ const getCounts = async (req, res) => {
       totalAdmin: adminCount,
       totalPosts: postCount,
       totalLogs: logCount,
+      totalReport: reportCount,
+      totalFeedback: feedbackCount,
 
       newStudentToday: todayStudentCount,
       newAdminsToday: todayAdminCount,

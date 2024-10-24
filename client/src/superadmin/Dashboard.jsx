@@ -20,6 +20,8 @@ const Dashboard = () => {
     totalStudent: 0,
     totalPosts: 0,
     totalLogs: 0,
+    totalReport: 0,
+    totalFeedback: 0,
     newUsersToday: 0,
   });
   
@@ -60,36 +62,26 @@ const Dashboard = () => {
           <div className="info-data">
             {/* Display Skeleton if loading, otherwise show counts */}
             <div className="card">
-              <div className="head">
-                {loading ? (
-                  <Skeleton active paragraph={{ rows: 1 }} />
-                ) : (
-                  <>
-                    <div>
-                      <h2 style={{ fontSize: '30px' }}>{counts.totalAdmin}</h2>
-                      <p>Total Admin</p>
-                    </div>
-                    <i className='bx bx-user-circle icon' style={{ color: 'blue' }}></i>
-                  </>
-                )}
-              </div>
-            </div>
+  <div className="head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    {loading ? (
+      <Skeleton active paragraph={{ rows: 1 }} />
+    ) : (
+      <>
+        <div style={{ flex: 1, textAlign: 'left' }}>
+          <h2 style={{ fontSize: '30px' }}>{counts.totalAdmin}</h2>
+          <p>Total Admin</p>
+        </div>
+        <div style={{ flex: 1, textAlign: 'right' }}>
+          <h2 style={{ fontSize: '30px' }}>{counts.totalStudent}</h2>
+          <p>Total Students</p>
+        </div>
+        <div style={{ display: 'flex', gap: '10px' }}>
 
-            <div className="card">
-              <div className="head">
-                {loading ? (
-                  <Skeleton active paragraph={{ rows: 1 }} />
-                ) : (
-                  <>
-                    <div>
-                      <h2 style={{ fontSize: '30px' }}>{counts.totalStudent}</h2>
-                      <p>Total Students</p>
-                    </div>           
-                    <i className='bx bx-user icon' style={{ color: 'blue' }}></i>
-                  </>
-                )}
-              </div>
-            </div>
+        </div>
+      </>
+    )}
+  </div>
+</div>
 
             <div className="card">
               <div className="head">
@@ -106,7 +98,6 @@ const Dashboard = () => {
                 )}
               </div>
             </div>
-
             <div className="card">
               <div className="head">
                 {loading ? (
@@ -114,14 +105,30 @@ const Dashboard = () => {
                 ) : (
                   <>
                     <div>
-                      <h2 style={{ fontSize: '30px' }}>{counts.totalLogs}</h2>
-                      <p>Total Logs</p>
+                      <h2 style={{ fontSize: '30px' }}>{counts.totalReport}</h2>
+                      <p>Total Report</p>
+                    </div>           
+                    <i className='bx bx-user icon' style={{ color: 'blue' }}></i>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="card">
+              <div className="head">
+                {loading ? (
+                  <Skeleton active paragraph={{ rows: 1 }} />
+                ) : (
+                  <>
+                    <div>
+                      <h2 style={{ fontSize: '30px' }}>{counts.totalFeedback}</h2>
+                      <p>Total Feedback</p>
                     </div>
                     <i className='bx bx-cog icon' style={{ color: 'blue' }}></i>
                   </>
                 )}
               </div>
             </div>
+            
           </div>
           <div className="data">
             <div className="content-data">

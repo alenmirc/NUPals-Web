@@ -42,12 +42,7 @@ const Navbar = () => {
       <form action="#">
         <div className="welcome-message">Admin</div>
       </form>
-      <a href="#" className="nav-link">
-        <i className='bx bxs-bell icon'></i>
-      </a>
-      <a href="#" className="nav-link">
-        <i className='bx bxs-message-square-dots icon'></i>
-      </a>
+    
       <span className="divider"></span>
 
       <div className="profile" ref={profileRef}>

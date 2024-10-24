@@ -5,6 +5,9 @@ const { createUserPosting, getPost, getPostbyid, deletePost, deleteComment, getP
 const { getUsers, getAllpost, adminDeletepost, editPost, updateUser, createUser, deleteUser, updateSAdminpassword,  getLogs, getStudentLogs  } = require('../controllers/adminController');
 const { getMessages, deleteMessage, getUserIdByEmail, logLegalReason, fetchGroupMessages, fetchAllGroupChats, deleteGroupMessage } = require('../controllers/messageController');
 const { viewGroupChats, createGroupChat, updateGroupChat, deleteGroupChat } = require('../controllers/groupChatController');
+const { getReports, resolveReport } = require('../controllers/reportsController');
+const {createFeedback, getFeedbacks, markFeedbackAsRead,} = require('../controllers/feedbackController'); // Import the controller functions
+const { getfeedbackreportcount } = require('../controllers/barController');
 const { requestOtp, verifyOtp } = require('../controllers/resetPassword');
 const { getCounts, getLoggedInUsersCount, getNewUsersOvertime, getMostLikedPosts, getMostCommentedPosts, getEngagementMetrics, getDailyActiveUsers, getTopInterestsAndCategories } = require('..//controllers/dashboardController'); // Adjust path as needed
 const { getUpdates, createUpdate, deleteUpdate} = require('../controllers/updatesController');
@@ -53,6 +56,18 @@ router.post('/createuser',  createUser);
 router.put('/updatesadminpassword', updateSAdminpassword);
 router.get('/getlogs', getLogs);
 router.get('/getstudentlogs', getStudentLogs);
+
+//reports controller
+router.get('/getreports', getReports);
+router.put('/reports/:id/resolve', resolveReport);
+
+//feedback controller
+router.post('/createfeedback', createFeedback);
+router.get('/getfeedback', getFeedbacks);
+router.put('/feedbackmark-as-read/:id', markFeedbackAsRead);
+
+//get count
+router.get('/getFeedbackReportCount', getfeedbackreportcount);
 
 //group chats
 router.get('/viewGroupChats', viewGroupChats);

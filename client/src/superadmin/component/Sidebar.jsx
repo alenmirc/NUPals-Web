@@ -1,16 +1,34 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Logo from '../../assets/logo.png';
 import { useLocation, Link } from 'react-router-dom';
+import axios from 'axios';
+import { Badge } from 'antd'; // Import Badge from antd
+import { FaTachometerAlt, FaUserShield, FaIdCard, FaPencilAlt, FaComments, FaPaperPlane, FaUsers, FaClipboardList } from 'react-icons/fa'; // Import new icons from react-icons
 
 const Sidebar = () => {
   const sidebarRef = useRef(null);
   const location = useLocation();
+  const [feedbackCount, setFeedbackCount] = useState(0);
+  const [reportCount, setReportCount] = useState(0);
 
   useEffect(() => {
     const sidebar = sidebarRef.current;
     const allDropdown = sidebar.querySelectorAll('.side-dropdown');
     const toggleSidebar = document.querySelector('nav .toggle-sidebar');
     const allSideDivider = sidebar.querySelectorAll('.divider');
+
+    const fetchCounts = async () => {
+      try {
+        const response = await axios.get('/getFeedbackReportCount');
+        const data = response.data; 
+        setFeedbackCount(data.feedbackCount);
+        setReportCount(data.reportCount);
+      } catch (error) {
+        console.error('Error fetching counts:', error);
+      }
+    };
+    
+    fetchCounts();
 
     const handleClickDropdown = (e) => {
       e.preventDefault();
@@ -60,68 +78,82 @@ const Sidebar = () => {
     };
   }, []);
 
-   // Function to check if the current route matches the link's href
-   const isActive = (path) => location.pathname === path;
+  // Function to check if the current route matches the link's href
+  const isActive = (path) => location.pathname === path;
 
   return (
     <section id="sidebar" ref={sidebarRef}>
-        <div className="brand">
-          <img src={Logo} alt="Logo" className="logo" />
-          <span className="text">NU Pals</span>
-        </div>
-        <ul className="side-menu">
-          <li>
-            <Link to="/super/dashboard" className={isActive('/super/dashboard') ? 'active' : ''}>
-              <i className='bx bxs-dashboard icon'></i> Dashboard
-            </Link>
-          </li>
-          <li className="divider" data-text="main">Main</li>
-          <li>
-            <Link to="/super/admin" className={isActive('/super/admin') ? 'active' : ''}>
-              <i className='bx bxs-user icon'></i> Admin Management
-            </Link>
-          </li>
-          <li>
-            <Link to="/super/student" className={isActive('/super/student') ? 'active' : ''}>
-              <i className='bx bxs-id-card icon'></i> Student Management
-            </Link>
-          </li>
-          <li>
-            <Link to="/super/post" className={isActive('/super/post') ? 'active' : ''}>
-              <i className='bx bxs-pencil icon'></i> Post Management
-            </Link>
-          </li>
-          <li>
-            <Link to="/super/comments" className={isActive('/super/comments') ? 'active' : ''}>
-              <i className='bx bxs-message-detail icon'></i> Comment Management
-            </Link>
-          </li>
-          <li>
-            <Link to="/super/message" className={isActive('/super/message') ? 'active' : ''}>
-              <i className='bx bxs-message-detail icon'></i> Message Management
-            </Link>
-          </li>
-          <li>
-            <Link to="/super/groupmessage" className={isActive('/super/groupmessage') ? 'active' : ''}>
-              <i className='bx bxs-message-detail icon'></i> Group Message
-            </Link>
-          </li>
-          <li>
-            <Link to="/super/studentlogs" className={isActive('/super/studentlogs') ? 'active' : ''}>
-              <i className='bx bxs-book icon'></i> Student Activity
-            </Link>
-          </li> <li>
-            <Link to="/super/adminlogs" className={isActive('/super/adminlogs') ? 'active' : ''}>
-              <i className='bx bxs-user-check icon'></i> Admin Activty
-            </Link>
-          </li>
-          <li>
-            <Link to="/super/systemlogs" className={isActive('/super/systemlogs') ? 'active' : ''}>
-              <i className='bx bxs-cog icon'></i> System Update Logs
-            </Link>
-          </li>
-        </ul>
-      </section>
+      <div className="brand">
+        <img src={Logo} alt="Logo" className="logo" />
+        <span className="text">NU Pals</span>
+      </div>
+      <ul className="side-menu">
+        <li>
+          <Link to="/super/dashboard" className={isActive('/super/dashboard') ? 'active' : ''}>
+            <FaTachometerAlt className="icon" /> Dashboard
+          </Link>
+        </li>
+        <li className="divider" data-text="main">Main</li>
+        <li>
+          <Link to="/super/admin" className={isActive('/super/admin') ? 'active' : ''}>
+            <FaUserShield className="icon" /> Admin Management
+          </Link>
+        </li>
+        <li>
+          <Link to="/super/student" className={isActive('/super/student') ? 'active' : ''}>
+            <FaIdCard className="icon" /> Student Management
+          </Link>
+        </li>
+        <li>
+          <Link to="/super/post" className={isActive('/super/post') ? 'active' : ''}>
+            <FaPencilAlt className="icon" /> Post Management
+          </Link>
+        </li>
+        <li>
+          <Link to="/super/comments" className={isActive('/super/comments') ? 'active' : ''}>
+            <FaComments className="icon" /> Comment Management
+          </Link>
+        </li>
+        <li>
+          <Link to="/super/message" className={isActive('/super/message') ? 'active' : ''}>
+            <FaPaperPlane className="icon" /> Message Management
+          </Link>
+        </li>
+        <li>
+          <Link to="/super/groupmessage" className={isActive('/super/groupmessage') ? 'active' : ''}>
+            <FaUsers className="icon" /> Group Message
+          </Link>
+        </li>
+        <li className="divider" data-text="main">Reports & Feedback</li>
+        <li>
+          <Link to="/super/reports" className={isActive('/super/reports') ? 'active' : ''}>
+            <FaClipboardList className="icon" /> Reports
+            <Badge count={reportCount} style={{ marginLeft: 5 }} />
+          </Link>
+        </li>
+        <li>
+          <Link to="/super/feedback" className={isActive('/super/feedback') ? 'active' : ''}>
+            <FaComments className="icon" /> Feedback
+          </Link>
+        </li>
+        <li className="divider" data-text="main">Logs</li>
+        <li>
+          <Link to="/super/studentlogs" className={isActive('/super/studentlogs') ? 'active' : ''}>
+            <i className='bx bxs-book icon'></i> Student Activity
+          </Link>
+        </li>
+        <li>
+          <Link to="/super/adminlogs" className={isActive('/super/adminlogs') ? 'active' : ''}>
+            <i className='bx bxs-user-check icon'></i> Admin Activity
+          </Link>
+        </li>
+        <li>
+          <Link to="/super/systemlogs" className={isActive('/super/systemlogs') ? 'active' : ''}>
+            <i className='bx bxs-cog icon'></i> System Update Logs
+          </Link>
+        </li>
+      </ul>
+    </section>
   );
 };
 
