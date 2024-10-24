@@ -36,11 +36,13 @@ import AdminComments from './superadmin/Comments';
 import AdminMessage from './superadmin/Message';
 import AdminGroupMessage from './superadmin/GroupMessage';
 import AdminGroupChat from './superadmin/GroupChat';
+import AdminReports from './superadmin/Reports';
+import AdminFeedback from './superadmin/Feedback';
 import AdminStudentLogs from './superadmin/StudentLogs';
 import AdminSystemLogs from './superadmin/SystemLogs';
 
-axios.defaults.baseURL = 'http://localhost:8000';
-//axios.defaults.baseURL = 'https://nupals-web.onrender.com';
+//axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = 'https://nupals-web.onrender.com';
 //axios.defaults.baseURL = 'https://nupals-server.vercel.app'; 
 axios.defaults.withCredentials = true
 
@@ -81,6 +83,8 @@ function App() {
       <Route path='/super/groupchat' element={<AdminPrivateRoute><AdminGroupChat /></AdminPrivateRoute>} />
       <Route path='/super/message' element={<AdminPrivateRoute><AdminMessage /></AdminPrivateRoute>} />
       <Route path='/super/systemlogs' element={<AdminPrivateRoute><AdminSystemLogs /></AdminPrivateRoute>} />
+      <Route path='/super/reports' element={<AdminPrivateRoute><AdminReports /></AdminPrivateRoute>} />
+      <Route path='/super/feedback' element={<AdminPrivateRoute><AdminFeedback /></AdminPrivateRoute>} />
       </Routes>
       </UserContextProvider>
     </>
