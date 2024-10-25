@@ -7,6 +7,41 @@
   display: none; /* Hide by default */
 }
 
+.logoContainer {
+  flex: 0 0 auto; /* Prevent the logo from growing */
+  margin-right: 20px; /* Add space between the logo and text */
+}
+
+.logo {
+  width: 300px; /* Default width for larger screens */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) { /* Adjust the breakpoint as needed */
+  .logoContainer {
+    margin: 0; /* Remove margin */
+    margin-bottom: 20px; /* Add space below the logo for mobile */
+    display: flex; /* Ensure it aligns properly */
+    justify-content: center; /* Center the logo */
+    width: 100%; /* Ensure full width for centering */
+  }
+
+  .logo {
+    width: 150px; /* Adjust the logo width for mobile */
+    display: block; /* Ensure it's treated as a block for centering */
+    margin: 0 auto; /* Center the logo */
+  }
+
+  .page-section {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically on mobile */
+    align-items: center; /* Center items */
+    text-align: center; /* Center text */
+  }
+}
+
+
 @media (max-width: 768px) { /* Adjust max-width as necessary */
   .mobileButton {
     display: inline-block; /* Show on mobile */
@@ -24,7 +59,9 @@
 
 .whiteBackground {
   background-color: white;
+
 }
+
 
 .navbar {
   --bs-navbar-padding-x: 0;
@@ -379,6 +416,7 @@
 
 .pageSection {
   padding: 6rem 0;
+  
 }
 
 .pageSection h2.sectionHeading,
@@ -523,15 +561,32 @@
 }
 
 .headerMasthead {
-  padding-top: 10.5rem;
+  padding-top: 0; /* Remove or adjust padding to fit content better */
   padding-bottom: 6rem;
-  text-align: center;
+ height: 100vh; /* Set the height to occupy the full viewport height */
   color: #fff;
   background-image: url("../assets/homebg.png");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally if needed */
 }
+
+.headerMasthead .text-content {
+  max-width: 50%; /* Limit the width of the text content */
+}
+
+.image-showcase {
+  max-width: 40%; /* Adjust this value as needed */
+}
+
+.appScreenshot {
+  width: 100%; /* Make the image responsive */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 8px; /* Optional: Add some border radius */
+}
+
 
 .headerMasthead .mastheadSubheading {
   font-size: 1.5rem;
@@ -551,16 +606,40 @@
 
 @media (min-width: 768px) {
   .headerMasthead {
-    padding-top: 17rem;
+    padding-top: 8rem;
     padding-bottom: 12.5rem;
   }
   .headerMasthead .mastheadSubheading {
     font-size: 2.25rem;
+    line-height: 2.25rem; 
+    margin-bottom: 2rem;
+  }
+  .headerMasthead .mastheadHeading {
+    font-size: 4.5rem;
+    line-height: 4.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .image-showcase {
+    max-width: 50%; /* Adjust for larger screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .headerMasthead {
+    padding-top: 17rem;
+    text-align: center;
+    padding-bottom: 12.5rem;
+  }
+  .headerMasthead .mastheadSubheading {
+    font-size: 2.25rem;
+    text-align: center;
     line-height: 2.25rem;
     margin-bottom: 2rem;
   }
   .headerMasthead .mastheadHeading {
     font-size: 4.5rem;
+    text-align: center;
     line-height: 4.5rem;
     margin-bottom: 4rem;
   }

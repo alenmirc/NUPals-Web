@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import styles from './home.module.css';
 import Logo from '../assets/logo.png';
+import Cp from '../assets/cp.png';
 
 const App = () => {
   useEffect(() => {
@@ -87,15 +88,22 @@ const App = () => {
       </nav>
 
 
-      {/* Masthead */}
-      <header className={styles.headerMasthead}>
-        <div className="container">
-          <div className={styles.mastheadSubheading}>Welcome to NUPals!</div>
-          <div className={styles.mastheadHeading}>Discover Your Next Campus Connection</div>
-          <a className={`${styles.btnXl} btn btn-primary text-uppercase`} href="#">DOWNLOAD APK</a>
-        </div>
-      </header>
-
+  {/* Masthead */}
+<header className={styles.headerMasthead}>
+  <div className="container d-flex justify-content-between align-items-center">
+    <div className="text-content">
+      <div className={styles.mastheadSubheading}>Welcome to NUPals!</div>
+      <div className={styles.mastheadHeading}>Discover Your Next Campus Connection</div>
+      <a className={`${styles.btnXl} btn btn-primary text-uppercase`} href="#">DOWNLOAD APK</a>
+    </div>
+    
+    {/* Image showcase */}
+    <div className="image-showcase">
+      <img src={Cp} alt="App Screenshot" className={styles.appScreenshot} />
+    </div>
+  </div>
+</header>
+  
 {/* Services */}
 <section className={`${styles.pageSection} ${styles.whiteBackground} page-section`} id="features">
   <div className="container">
@@ -109,42 +117,51 @@ const App = () => {
           <i className="bx bxs-group text-primary" style={{ fontSize: '7rem' }}></i>
         </span>
         <h4 className={`my-3 ${styles.fontMontserrat}`}>Student Matching</h4>
-  <p className={`text-muted ${styles.fontMontserrat}`}>
-    Connect with fellow NU students based on shared interests and hobbies.
-  </p>
-</div>
-<div className="col-md-4">
-  <span className="fa-stack fa-4x">
-    <i className="bx bxs-message-rounded-detail text-primary" style={{ fontSize: '7rem' }}></i>
-  </span>
-  <h4 className={`my-3 ${styles.fontMontserrat}`}>Instant Messaging</h4>
-  <p className={`text-muted ${styles.fontMontserrat}`}>
-    Chat instantly with your matches and start building meaningful connections.
-  </p>
-</div>
-<div className="col-md-4">
-  <span className="fa-stack fa-4x">
-    <i className="bx bxs-shield text-primary" style={{ fontSize: '7rem' }}></i>
-  </span>
-  <h4 className={`my-3 ${styles.fontMontserrat}`}>Privacy & Security</h4>
-  <p className={`text-muted ${styles.fontMontserrat}`}>
-    Your privacy is our priority. Rest assured your data is safe and secure.
-  </p>
+        <p className={`text-muted ${styles.fontMontserrat}`}>
+          Connect with fellow NU students based on shared interests and hobbies.
+        </p>
+      </div>
+      <div className="col-md-4">
+        <span className="fa-stack fa-4x">
+          <i className="bx bxs-message-rounded-detail text-primary" style={{ fontSize: '7rem' }}></i>
+        </span>
+        <h4 className={`my-3 ${styles.fontMontserrat}`}>Instant Messaging</h4>
+        <p className={`text-muted ${styles.fontMontserrat}`}>
+          Chat instantly with your matches and start building meaningful connections.
+        </p>
+      </div>
+      <div className="col-md-4">
+        <span className="fa-stack fa-4x">
+          <i className="bx bxs-group text-primary" style={{ fontSize: '7rem' }}></i> {/* Icon for group interest chats */}
+        </span>
+        <h4 className={`my-3 ${styles.fontMontserrat}`}>Interest-Based Group Chats</h4>
+        <p className={`text-muted ${styles.fontMontserrat}`}>
+          Join group chats with peers who share similar interests. Connect and collaborate on common passions within NU Pals.
+        </p>
       </div>
     </div>
   </div>
 </section>
 
-      {/* About */}
-      <section className={`${styles.pageSection} ${styles.bgLight} page-section`} id="about">
-        <div className="container">
-          <div className="text-center">
-            <h2 className={styles.sectionHeading}>About</h2>
-            <h3 className={styles.sectionSubheading}>NUPals is an exclusive social platform designed for NU students to foster collaboration and connection within the university community. With NUPals, students can match with others based on shared interests, opening up opportunities for academic partnerships, project collaborations, or simply making new friends. Our system allows you to explore common hobbies, skills, and activities while providing a secure space to message and connect with like-minded peers. </h3>
-          </div>
-        
+
+{/* About */}
+<section className={`${styles.pageSection} ${styles.bgLight} page-section`} id="about">
+  <div className="container">
+    <div className={`d-flex flex-column align-items-center`}>
+      <h2 className={styles.sectionHeading}>About</h2>
+      <div className={`d-flex flex-column flex-md-row align-items-center justify-content-center`}>
+        <div className={styles.logoContainer}>
+          <img src={Logo} alt="NUPals Logo" className={styles.logo} />
         </div>
-      </section>
+        <h3 className={styles.sectionSubheading}>
+          NUPals is an exclusive social platform designed for NU students to foster collaboration and connection within the university community. With NUPals, students can match with others based on shared interests, opening up opportunities for academic partnerships, project collaborations, or simply making new friends. Our system allows you to explore common hobbies, skills, and activities while providing a secure space to message and connect with like-minded peers.
+        </h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 
       {/* Contact */}
       <section className={`${styles.pageSection} ${styles.contactBackground} page-section`} id="contact">

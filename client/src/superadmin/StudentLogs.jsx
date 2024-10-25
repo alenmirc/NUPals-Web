@@ -3,31 +3,38 @@ import { Table, Input, Spin } from 'antd';
 import axios from 'axios';
 import Navbar from './component/Navbar';
 import Sidebar from './component/Sidebar';
-import './style.css'; 
-
+import './style.css';
 
 const { Search } = Input;
 
 const Logs = () => {
   const [logs, setLogs] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Initial mobile check
 
   const fetchLogs = async () => {
     try {
-      setLoading(true); // Start loading
+      setLoading(true);
       const response = await axios.get('/getstudentlogs');
       setLogs(response.data);
     } catch (error) {
-      console.error('Error fetching Logs:', error); // Log the error
-      toast.error('Error fetching Logs'); // Show error notification
+      console.error('Error fetching Logs:', error);
+      toast.error('Error fetching Logs');
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchLogs();
+
+    // Update isMobile on window resize
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const filteredLogs = logs.filter(log =>
@@ -76,30 +83,42 @@ const Logs = () => {
           <div className="data">
             <div className="content-data">
               <div className="head" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <div className="left">
-                  <Search
-                    placeholder="Search logs"
-                    enterButton
-                    onSearch={value => setSearchQuery(value)}
-                    className="search-input"
-                    style={{ marginBottom: '20px' }}
-                  />
-                </div>
+                <Search
+                  placeholder="Search logs"
+                  enterButton
+                  onSearch={value => setSearchQuery(value)}
+                  className="search-input"
+                  style={{ marginBottom: '20px' }}
+                />
               </div>
-                {/* Show spinner while loading */}
-          {loading ? (
+
+              {loading ? (
                 <div className="loading-spinner">
-                  <Spin tip="Loading posts..." />
+                  <Spin tip="Loading logs..." />
+                </div>
+              ) : isMobile ? (
+                // Mobile view
+                <div className="logs-list">
+                  {filteredLogs.map(log => (
+                    <div className="log-item" key={log._id}>
+                      <div><strong>Level:</strong> {log.level}</div>
+                      <div><strong>Message:</strong> {log.message}</div>
+                      <div><strong>Student Email:</strong> {log.studentName || 'N/A'}</div>
+                      <div><strong>Timestamp:</strong> {new Date(log.timestamp).toLocaleString()}</div>
+                      <hr />
+                    </div>
+                  ))}
                 </div>
               ) : (
-              <div className="table-responsive">
-              <Table
-                columns={columns}
-                dataSource={filteredLogs}
-                rowKey="_id"
-                pagination={{ pageSize: 10 }}
-                sorter={true}
-              /></div>
+                // Desktop view with Table component
+                <div className="table-responsive">
+                  <Table
+                    columns={columns}
+                    dataSource={filteredLogs}
+                    rowKey="_id"
+                    pagination={{ pageSize: 10 }}
+                  />
+                </div>
               )}
             </div>
           </div>

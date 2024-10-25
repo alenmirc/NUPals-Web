@@ -206,7 +206,19 @@ const Post = () => {
         return 'Unsupported Media Type';
       },
     },
-    
+    {
+      title: 'Likes',
+      dataIndex: 'likes',
+      render: (likes) => (likes ? likes.length : 0),
+      sorter: (a, b) => a.likes.length - b.likes.length,
+      
+    },
+    {
+      title: 'Comments',
+      dataIndex: 'comments',
+      render: (comments) => comments?.length || 0,
+      sorter: (a, b) => (a.comments?.length || 0) - (b.comments?.length || 0),
+    },
     {
       title: 'Created At',
       dataIndex: 'createdAt',
