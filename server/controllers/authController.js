@@ -217,7 +217,7 @@ const loginUser = async (req, res) => {
         res.cookie('token', token, {
           httpOnly: true, // This should typically remain true for security
           secure: true, // Set to false during development; use true in production when using HTTPS
-          sameSite: 'None', // Allows cross-origin requests, which is often needed in development
+          sameSite: 'Lax', // Allows cross-origin requests, which is often needed in development
           maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
         });
 
