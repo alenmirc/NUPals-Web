@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Form, Button, Input, Modal, Spin } from 'antd'; // Import Ant Design components
+import { Table, Form, Button, Input, Modal, Spin } from 'antd';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import Navbar from './component/Navbar'; // Assuming you have Navbar for layout
-import Sidebar from './component/Sidebar'; // Assuming you have Sidebar for layout
-import './style.css'; // Import your style file
+import Navbar from './component/Navbar';
+import Sidebar from './component/Sidebar';
+import './style.css';
 
 const GroupChatAdmin = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -85,6 +85,7 @@ const GroupChatAdmin = () => {
     });
   };
 
+  // Filtered group chats based on the search query
   const filteredGroupChats = groupChats.filter(chat =>
     chat.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -99,8 +100,8 @@ const GroupChatAdmin = () => {
       title: 'Action',
       render: (text, chat) => (
         <>
-          <Button type="primary" onClick={() => handleEditClick(chat)}>Edit</Button>
-          <Button type="danger" onClick={() => handleDelete(chat._id)}>Delete</Button>
+          <Button type="primary" size="small" onClick={() => handleEditClick(chat)}>Edit</Button>
+          <Button type="danger" className="table-delete-button" size="small" onClick={() => handleDelete(chat._id)}>Delete</Button>
         </>
       ),
     },
@@ -112,37 +113,37 @@ const GroupChatAdmin = () => {
       <section id="content">
         <Navbar />
         <main>
-      
           <h1 className="title">Group Chat Management</h1>
           <div className="data">
-          <div className="content-data">
-          <Input
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ marginBottom: '20px', width: '300px' }}
-          />
-          <Button type="primary" onClick={() => setShowCreateModal(true)}>Create New Group Chat</Button>
+            <div className="content-data">
+              <Input
+                placeholder="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ marginBottom: '20px', width: '300px' }}
+              />
+              <Button type="primary" onClick={() => setShowCreateModal(true)}>Create New Group Chat</Button>
 
-          {loading ? (
-            <div className="loading-spinner">
-              <Spin tip="Loading group chats..." />
+              {loading ? (
+                <div className="loading-spinner">
+                  <Spin tip="Loading group chats..." />
+                </div>
+              ) : (
+                <Table
+                  columns={columns}
+                  dataSource={filteredGroupChats}
+                  rowKey="_id"
+                  pagination={{
+                    current: currentPage,
+                    pageSize: itemsPerPage,
+                    total: filteredGroupChats.length,
+                    onChange: (page) => setCurrentPage(page),
+                  }}
+                  bordered
+                />
+              )}
             </div>
-          ) : (
-            <Table
-              columns={columns}
-              dataSource={filteredGroupChats}
-              rowKey="_id"
-              pagination={{
-                current: currentPage,
-                pageSize: itemsPerPage,
-                total: filteredGroupChats.length,
-                onChange: (page) => setCurrentPage(page),
-              }}
-              bordered
-            />
-          )}
-          </div></div>
+          </div>
 
           {/* Create Modal */}
           <Modal
@@ -184,3 +185,4 @@ const GroupChatAdmin = () => {
 };
 
 export default GroupChatAdmin;
+    

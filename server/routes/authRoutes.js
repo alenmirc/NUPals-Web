@@ -5,6 +5,7 @@ const { createUserPosting, getPost, getPostbyid, deletePost, deleteComment, getP
 const { getUsers, getAllpost, adminDeletepost, editPost, updateUser, createUser, deleteUser, updateSAdminpassword,  getLogs, getStudentLogs  } = require('../controllers/adminController');
 const { getMessages, deleteMessage, getUserIdByEmail, logLegalReason, fetchGroupMessages, fetchAllGroupChats, deleteGroupMessage } = require('../controllers/messageController');
 const { viewGroupChats, createGroupChat, updateGroupChat, deleteGroupChat } = require('../controllers/groupChatController');
+const { createKeyword, getKeywords, updateKeyword, deleteKeyword} = require('../controllers/keywordsController');
 const { getReports, resolveReport } = require('../controllers/reportsController');
 const {createFeedback, getFeedbacks, markFeedbackAsRead,} = require('../controllers/feedbackController'); // Import the controller functions
 const { getfeedbackreportcount } = require('../controllers/barController');
@@ -74,6 +75,12 @@ router.get('/viewGroupChats', viewGroupChats);
 router.post('/createGroupChat', authenticate, createGroupChat);
 router.put('/updateGroupChat/:id', authenticate, updateGroupChat);
 router.delete('/deleteGroupChat/:id', authenticate, deleteGroupChat);
+
+//multi-keywords
+router.post('/createKeyword', authenticate, createKeyword);
+router.get('/viewKeywords', getKeywords);
+router.put('/updateKeyword/:id', authenticate, updateKeyword);
+router.delete('/deleteKeyword/:id', authenticate, deleteKeyword);
 
 //messagesController
 router.get('/getmessages', getMessages);

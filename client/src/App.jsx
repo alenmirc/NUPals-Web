@@ -24,6 +24,7 @@ import Student from './pages/Dashboard/Student';
 import Post from './pages/Dashboard/Post';
 import Profile from './pages/Dashboard/Profile';
 import Comments from './pages/Dashboard/Comments';
+import Keywords from './pages/Dashboard/Keywords';
 import Reports from './pages/Dashboard/Reports';
 import Feedback from './pages/Dashboard/Feedback';
 import StudentLogs from './pages/Dashboard/StudentLogs';
@@ -39,6 +40,7 @@ import AdminComments from './superadmin/Comments';
 import AdminMessage from './superadmin/Message';
 import AdminGroupMessage from './superadmin/GroupMessage';
 import AdminGroupChat from './superadmin/GroupChat';
+import AdminKeywords from './superadmin/Keywords';
 import AdminReports from './superadmin/Reports';
 import AdminFeedback from './superadmin/Feedback';
 import AdminStudentLogs from './superadmin/StudentLogs';
@@ -72,6 +74,7 @@ function App() {
       <Route path='/comments' element={<PrivateRoute><Comments /></PrivateRoute>}/>
       <Route path='/template' element={<PrivateRoute><Template /></PrivateRoute>}/>
       <Route path='/comments' element={<PrivateRoute><Comments /></PrivateRoute>}/>
+      <Route path='/keywords' element={<PrivateRoute><Keywords /></PrivateRoute>}/>
       <Route path='/studentlogs' element={<PrivateRoute><StudentLogs /></PrivateRoute>}/>
       <Route path='/reports' element={<PrivateRoute><Reports /></PrivateRoute>}/>
       <Route path='/feedback' element={<PrivateRoute><Feedback /></PrivateRoute>}/>
@@ -88,6 +91,7 @@ function App() {
       <Route path='/super/comments' element={<AdminPrivateRoute><AdminComments /></AdminPrivateRoute>} />
       <Route path='/super/groupmessage' element={<AdminPrivateRoute><AdminGroupMessage /></AdminPrivateRoute>} />
       <Route path='/super/groupchat' element={<AdminPrivateRoute><AdminGroupChat /></AdminPrivateRoute>} />
+      <Route path='/super/keywords' element={<AdminPrivateRoute><AdminKeywords /></AdminPrivateRoute>} />
       <Route path='/super/message' element={<AdminPrivateRoute><AdminMessage /></AdminPrivateRoute>} />
       <Route path='/super/systemlogs' element={<AdminPrivateRoute><AdminSystemLogs /></AdminPrivateRoute>} />
       <Route path='/super/reports' element={<AdminPrivateRoute><AdminReports /></AdminPrivateRoute>} />

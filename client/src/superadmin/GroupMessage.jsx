@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spin, Select } from 'antd';
+import { Modal, Table, Button, Spin, Select, Typography } from 'antd';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import Navbar from './component/Navbar';
 import Sidebar from './component/Sidebar';
 import './style.css';
+
+
+const { Title, Paragraph } = Typography;
+
 
 const GroupMessages = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -74,6 +78,12 @@ const GroupMessages = () => {
                     <h1 className="title">Group Messages</h1>
                     <div className="data">
                         <div className="content-data">
+                        <div style={{ marginBottom: '20px', padding: '10px', border: '1px solid #d9d9d9', borderRadius: '4px', backgroundColor: '#f0f0f0' }}>
+                <Title level={5}>Privacy Warning</Title>
+                <Paragraph>
+                Privacy Warning: As a superadmin, you have access to sensitive group messages. Please handle this information with care.
+                </Paragraph>
+              </div>
                             <Select
                                 placeholder="Select Group Chat"
                                 onChange={value => {

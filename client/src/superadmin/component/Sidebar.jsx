@@ -3,13 +3,14 @@ import Logo from '../../assets/logo.png';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Badge } from 'antd'; // Import Badge from antd
-import { FaTachometerAlt, FaUserShield, FaIdCard, FaPencilAlt, FaComments, FaPaperPlane, FaUsers, FaClipboardList } from 'react-icons/fa'; // Import new icons from react-icons
+import { FaTachometerAlt, FaUserShield, FaIdCard, FaTag, FaPencilAlt, FaComments, FaPaperPlane, FaUsers, FaClipboardList } from 'react-icons/fa'; // Import new icons from react-icons
 
 const Sidebar = () => {
   const sidebarRef = useRef(null);
   const location = useLocation();
   const [feedbackCount, setFeedbackCount] = useState(0);
   const [reportCount, setReportCount] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Adjust based on your mobile breakpoint
 
   useEffect(() => {
     const sidebar = sidebarRef.current;
@@ -27,7 +28,7 @@ const Sidebar = () => {
         console.error('Error fetching counts:', error);
       }
     };
-    
+
     fetchCounts();
 
     const handleClickDropdown = (e) => {
@@ -62,12 +63,20 @@ const Sidebar = () => {
       }
     };
 
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768 && sidebar.classList.contains('hide')) {
+        sidebar.classList.remove('hide'); // Ensure sidebar is visible on larger screens
+      }
+    };
+
     allDropdown.forEach(item => {
       const a = item.parentElement.querySelector('a:first-child');
       a.addEventListener('click', handleClickDropdown);
     });
 
     toggleSidebar.addEventListener('click', handleClickSidebar);
+    window.addEventListener('resize', handleResize); // Add resize listener
 
     return () => {
       allDropdown.forEach(item => {
@@ -75,6 +84,7 @@ const Sidebar = () => {
         a.removeEventListener('click', handleClickDropdown);
       });
       toggleSidebar.removeEventListener('click', handleClickSidebar);
+      window.removeEventListener('resize', handleResize); // Clean up resize listener
     };
   }, []);
 
@@ -82,7 +92,7 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <section id="sidebar" ref={sidebarRef}>
+    <section id="sidebar" ref={sidebarRef} className={isMobile ? 'hide' : ''}>
       <div className="brand">
         <img src={Logo} alt="Logo" className="logo" />
         <span className="text">NU Pals</span>
@@ -122,6 +132,12 @@ const Sidebar = () => {
         <li>
           <Link to="/super/groupmessage" className={isActive('/super/groupmessage') ? 'active' : ''}>
             <FaUsers className="icon" /> Group Message
+          </Link>
+        </li>
+        <li className="divider" data-text="main">Tools</li>
+        <li>
+          <Link to="/super/keywords" className={isActive('/super/keywords') ? 'active' : ''}>
+            <FaTag className="icon" /> Multi-keywords
           </Link>
         </li>
         <li className="divider" data-text="main">Reports & Feedback</li>
