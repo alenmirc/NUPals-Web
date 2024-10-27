@@ -8,104 +8,109 @@ import './style.css';
 
 const { Search } = Input;
 
-const MultiKeywordAdmin = () => {
+const StopwordAdmin = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
-    const [keywords, setKeywords] = useState([]);
+    const [stopwords, setStopwords] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
-    const [currentKeyword, setCurrentKeyword] = useState(null);
-    const [newKeyword, setNewKeyword] = useState({ keyword: '' });
-    const [updatedKeyword, setUpdatedKeyword] = useState({ keyword: '' });
+    const [currentStopword, setCurrentStopword] = useState(null);
+    const [newStopwords, setNewStopwords] = useState(''); // Updated to hold a string
+    const [updatedStopword, setUpdatedStopword] = useState({ word: '' });
 
-    const fetchKeywords = async () => {
+    const fetchStopwords = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('/viewKeywords');
-            setKeywords(response.data);
+            const response = await axios.get('/viewStopwords'); // Ensure the endpoint is correct
+            setStopwords(response.data);
         } catch (error) {
-            console.error('Error fetching keywords:', error);
-            toast.error('Error fetching keywords');
+            console.error('Error fetching stopwords:', error);
+            toast.error('Error fetching stopwords');
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchKeywords();
+        fetchStopwords();
     }, []);
 
-    const handleEditClick = (keyword) => {
-        setCurrentKeyword(keyword);
-        setUpdatedKeyword({ keyword: keyword.keyword });
+    const handleEditClick = (stopword) => {
+        setCurrentStopword(stopword);
+        setUpdatedStopword({ word: stopword.word });
         setShowEditModal(true);
     };
 
     const handleCreateSubmit = async () => {
+        const wordsArray = newStopwords.split(/[\s,]+/).filter(Boolean); // Split by spaces or commas
+
+        if (wordsArray.length === 0) {
+            toast.error('Please enter at least one stopword');
+            return;
+        }
+
         try {
-            await axios.post('/createKeyword', newKeyword);
-            fetchKeywords();
+            await axios.post('/createStopword', { words: wordsArray }); // Send as an array
+            fetchStopwords();
             setShowCreateModal(false);
-            setNewKeyword({ keyword: '' });
-            toast.success('Keyword created successfully!');
-          } catch (error) {
-            console.error('Error creating keyword:', error);
-            
-            // Display the specific error message from the response
-            const errorMessage = error.response?.data?.message || 'Error creating keyword';
+            setNewStopwords(''); // Reset to empty string
+            toast.success('Stopwords created successfully!');
+        } catch (error) {
+            console.error('Error creating stopwords:', error);
+            const errorMessage = error.response?.data?.message || 'Error creating stopwords';
             toast.error(errorMessage);
         }
     };
 
     const handleEditSubmit = async () => {
         try {
-            await axios.put(`/updateKeyword/${currentKeyword._id}`, updatedKeyword);
-            fetchKeywords();
+            await axios.put(`/updateStopword/${currentStopword._id}`, updatedStopword);
+            fetchStopwords();
             setShowEditModal(false);
-            toast.success('Keyword updated successfully!');
+            toast.success('Stopword updated successfully!');
         } catch (error) {
-            console.error('Error updating keyword:', error);
-            toast.error('Error updating keyword');
+            console.error('Error updating stopword:', error);
+            toast.error('Error updating stopword');
         }
     };
 
     const handleDelete = async (id) => {
         Modal.confirm({
-            title: 'Are you sure you want to delete this keyword?',
+            title: 'Are you sure you want to delete this stopword?',
             okText: 'Yes',
             okType: 'danger',
             cancelText: 'No',
             onOk: async () => {
                 try {
-                    await axios.delete(`/deleteKeyword/${id}`);
-                    fetchKeywords();
-                    toast.success('Keyword deleted successfully!');
+                    await axios.delete(`/deleteStopword/${id}`);
+                    fetchStopwords();
+                    toast.success('Stopword deleted successfully!');
                 } catch (error) {
-                    console.error('Error deleting keyword:', error);
-                    toast.error('Error deleting keyword');
+                    console.error('Error deleting stopword:', error);
+                    toast.error('Error deleting stopword');
                 }
             },
         });
     };
 
-    const filteredKeywords = keywords.filter(keyword =>
-        keyword.keyword.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredStopwords = stopwords.filter(stopword =>
+        stopword.word.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const columns = [
         {
-            title: 'Keyword',
-            dataIndex: 'keyword',
-            sorter: (a, b) => a.keyword.localeCompare(b.keyword),
+            title: 'Stopword',
+            dataIndex: 'word',
+            sorter: (a, b) => a.word.localeCompare(b.word),
         },
         {
             title: 'Action',
-            render: (text, keyword) => (
+            render: (text, stopword) => (
                 <>
-                    <Button type="primary" size="small" onClick={() => handleEditClick(keyword)}>Edit</Button>
-                    <Button type="danger" className="table-delete-button" size="small" onClick={() => handleDelete(keyword._id)}>Delete</Button>
+                    <Button type="primary" size="small" onClick={() => handleEditClick(stopword)}>Edit</Button>
+                    <Button type="danger" className="table-delete-button" size="small" onClick={() => handleDelete(stopword._id)}>Delete</Button>
                 </>
             ),
         },
@@ -117,36 +122,36 @@ const MultiKeywordAdmin = () => {
             <section id="content">
                 <Navbar />
                 <main>
-                    <h1 className="title">Multi-keywords Management</h1>
+                    <h1 className="title">Stopword Management</h1>
                     <div className="data">
                         <div className="content-data">
                             {/* Search Input */}
                             <div className="head" style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
                                 <Search
-                                    placeholder="Search keywords"
+                                    placeholder="Search stopwords"
                                     enterButton
                                     onSearch={value => setSearchQuery(value)}
                                     className="search-input"
                                     style={{ width: '300px' }}
                                 />
                                 <Button type="primary" onClick={() => setShowCreateModal(true)} style={{ marginLeft: '10px' }}>
-                                    Create New Keyword
+                                    Create New Stopword
                                 </Button>
                             </div>
 
                             {loading ? (
                                 <div className="loading-spinner">
-                                    <Spin tip="Loading keywords..." />
+                                    <Spin tip="Loading stopwords..." />
                                 </div>
                             ) : (
                                 <Table
                                     columns={columns}
-                                    dataSource={filteredKeywords}
+                                    dataSource={filteredStopwords}
                                     rowKey="_id"
                                     pagination={{
                                         current: currentPage,
                                         pageSize: itemsPerPage,
-                                        total: filteredKeywords.length,
+                                        total: filteredStopwords.length,
                                         onChange: (page) => setCurrentPage(page),
                                     }}
                                     bordered
@@ -157,16 +162,17 @@ const MultiKeywordAdmin = () => {
 
                     {/* Create Modal */}
                     <Modal
-                        title="Create New Keyword"
+                        title="Create New Stopwords"
                         visible={showCreateModal}
                         onCancel={() => setShowCreateModal(false)}
                         onOk={handleCreateSubmit}
                     >
                         <Form>
-                            <Form.Item label="Keyword">
-                                <Input
-                                    value={newKeyword.keyword}
-                                    onChange={(e) => setNewKeyword({ keyword: e.target.value })}
+                            <Form.Item label="Stopwords (comma or new line separated)">
+                                <Input.TextArea
+                                    value={newStopwords}
+                                    onChange={(e) => setNewStopwords(e.target.value)}
+                                    rows={4}
                                 />
                             </Form.Item>
                         </Form>
@@ -174,16 +180,16 @@ const MultiKeywordAdmin = () => {
 
                     {/* Edit Modal */}
                     <Modal
-                        title="Edit Keyword"
+                        title="Edit Stopword"
                         visible={showEditModal}
                         onCancel={() => setShowEditModal(false)}
                         onOk={handleEditSubmit}
                     >
                         <Form>
-                            <Form.Item label="Keyword">
+                            <Form.Item label="Stopword">
                                 <Input
-                                    value={updatedKeyword.keyword}
-                                    onChange={(e) => setUpdatedKeyword({ keyword: e.target.value })}
+                                    value={updatedStopword.word}
+                                    onChange={(e) => setUpdatedStopword({ word: e.target.value })}
                                 />
                             </Form.Item>
                         </Form>
@@ -194,4 +200,4 @@ const MultiKeywordAdmin = () => {
     );
 };
 
-export default MultiKeywordAdmin;
+export default StopwordAdmin;

@@ -3,7 +3,7 @@ import Logo from '../../assets/logo.png';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Badge } from 'antd'; // Import Badge from antd
-import { FaTachometerAlt, FaUserShield, FaIdCard, FaTag, FaPencilAlt, FaComments, FaPaperPlane, FaUsers, FaClipboardList } from 'react-icons/fa'; // Import new icons from react-icons
+import { FaTachometerAlt, FaUserShield,FaExclamationTriangle, FaIdCard, FaTag, FaPencilAlt, FaComments, FaPaperPlane, FaUsers, FaClipboardList } from 'react-icons/fa'; // Import new icons from react-icons
 
 const Sidebar = () => {
   const sidebarRef = useRef(null);
@@ -138,6 +138,11 @@ const Sidebar = () => {
         <li>
           <Link to="/super/keywords" className={isActive('/super/keywords') ? 'active' : ''}>
             <FaTag className="icon" /> Multi-keywords
+          </Link>
+        </li>
+        <li>
+          <Link to="/super/stopwords" className={isActive('/super/stopwords') ? 'active' : ''}>
+          <FaExclamationTriangle className="icon" /> Stopwords
           </Link>
         </li>
         <li className="divider" data-text="main">Reports & Feedback</li>

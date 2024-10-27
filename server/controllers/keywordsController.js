@@ -6,6 +6,11 @@ const Log = require('../models/log'); // Import the Log model
 const createKeyword = async (req, res) => {
     const { keyword } = req.body;
     try {
+        // Check if the keyword already exists
+        const existingKeyword = await Keywords.findOne({ keyword });
+        if (existingKeyword) {
+            return res.status(400).json({ message: 'Keyword already exists' });
+        }
         const newKeyword = new Keywords({ keyword });
         await newKeyword.save();
         

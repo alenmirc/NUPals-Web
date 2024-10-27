@@ -6,6 +6,7 @@ const { getUsers, getAllpost, adminDeletepost, editPost, updateUser, createUser,
 const { getMessages, deleteMessage, getUserIdByEmail, logLegalReason, fetchGroupMessages, fetchAllGroupChats, deleteGroupMessage } = require('../controllers/messageController');
 const { viewGroupChats, createGroupChat, updateGroupChat, deleteGroupChat } = require('../controllers/groupChatController');
 const { createKeyword, getKeywords, updateKeyword, deleteKeyword} = require('../controllers/keywordsController');
+const { getAllStopwords,createStopword,updateStopword,deleteStopword} = require('../controllers/stopwordsController');
 const { getReports, resolveReport } = require('../controllers/reportsController');
 const {createFeedback, getFeedbacks, markFeedbackAsRead,} = require('../controllers/feedbackController'); // Import the controller functions
 const { getfeedbackreportcount } = require('../controllers/barController');
@@ -81,6 +82,12 @@ router.post('/createKeyword', authenticate, createKeyword);
 router.get('/viewKeywords', getKeywords);
 router.put('/updateKeyword/:id', authenticate, updateKeyword);
 router.delete('/deleteKeyword/:id', authenticate, deleteKeyword);
+
+// Stopword routes
+router.post('/createStopword', authenticate, createStopword);
+router.get('/viewStopwords', getAllStopwords);
+router.put('/updateStopword/:id', authenticate, updateStopword);
+router.delete('/deleteStopword/:id', authenticate, deleteStopword);
 
 //messagesController
 router.get('/getmessages', getMessages);

@@ -110,18 +110,24 @@ const Admin = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    username: '', // Added username field
     role: 'admin',
   });
 
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
-    const { firstName, lastName, email, password, confirmPassword } = newUser; // Use newUser
+    const { firstName, lastName, email, password, confirmPassword, username } = newUser; // Use newUser
     try {
       const { data } = await axios.post('/register', {
-        firstName, lastName, email, password, confirmPassword // Ensure the endpoint matches your backend
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmPassword,
+        username, // Include username in the request
       });
-  
+
       if (data.error) {
         toast.error(data.error);
       } else {
@@ -132,7 +138,8 @@ const Admin = () => {
           lastName: '',
           email: '',
           password: '',
-          confirmPassword: ''
+          confirmPassword: '',
+          username: '', // Reset username
         });
         toast.success('Account created successfully!');
       }
@@ -297,49 +304,53 @@ const Admin = () => {
 
           {/* Create Modal */}
           <Modal
-      title="Create New User"
-      open={showCreateModal}
-      onCancel={() => setShowCreateModal(false)}
-      onOk={handleCreateSubmit}
-    >
-      <Form layout="vertical" onFinish={handleCreateSubmit}>
-        <Form.Item label="First Name" required>
-          <Input
-            value={newUser.firstName}
-            onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
-          />
-        </Form.Item>
-        <Form.Item label="Last Name" required>
-          <Input
-            value={newUser.lastName}
-            onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
-          />
-        </Form.Item>
-        <Form.Item label="Email" required>
-          <Input
-            type="email"
-            value={newUser.email}
-            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-          />
-        </Form.Item>
-        <Form.Item label="Password" required>
-          <Input
-            type="password"
-            value={newUser.password}
-            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-          />
-        </Form.Item>
-        <Form.Item label="Confirm Password" required>
-          <Input
-            type="password"
-            value={newUser.confirmPassword}
-            onChange={(e) => setNewUser({ ...newUser, confirmPassword: e.target.value })}
-          />
-        </Form.Item>
-    
-        
-      </Form>
-    </Modal>
+            title="Create New User"
+            open={showCreateModal}
+            onCancel={() => setShowCreateModal(false)}
+            onOk={handleCreateSubmit}
+          >
+            <Form layout="vertical" onFinish={handleCreateSubmit}>
+              <Form.Item label="First Name" required>
+                <Input
+                  value={newUser.firstName}
+                  onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
+                />
+              </Form.Item>
+              <Form.Item label="Last Name" required>
+                <Input
+                  value={newUser.lastName}
+                  onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
+                />
+              </Form.Item>
+              <Form.Item label="Username" required>
+                <Input
+                  value={newUser.username} // Added input for username
+                  onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+                />
+              </Form.Item>
+              <Form.Item label="Email" required>
+                <Input
+                  type="email"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                />
+              </Form.Item>
+              <Form.Item label="Password" required>
+                <Input
+                  type="password"
+                  value={newUser.password}
+                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                />
+              </Form.Item>
+              <Form.Item label="Confirm Password" required>
+                <Input
+                  type="password"
+                  value={newUser.confirmPassword}
+                  onChange={(e) => setNewUser({ ...newUser, confirmPassword: e.target.value })}
+                />
+              </Form.Item>
+            </Form>
+          </Modal>
 
     <Modal
   title="Confirm Deletion"

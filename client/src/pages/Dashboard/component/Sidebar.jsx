@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState} from 'react';
 import Logo from '../../../assets/logo.png';
 import { useLocation, Link } from 'react-router-dom';
-import { FaTachometerAlt, FaIdCard, FaPencilAlt, FaTag, FaComments, FaClipboardList } from 'react-icons/fa'; // Import new icons from react-icons
+import { FaTachometerAlt, FaIdCard, FaPencilAlt,FaExclamationTriangle, FaTag, FaComments, FaClipboardList } from 'react-icons/fa'; // Import new icons from react-icons
 import axios from 'axios';
 import { Badge } from 'antd'; // Import Badge from antd
 
@@ -123,6 +123,11 @@ const Sidebar = () => {
         <li>
           <Link to="/keywords" className={isActive('/keywords') ? 'active' : ''}>
             <FaTag className="icon" /> Multi-keywords
+          </Link>
+        </li>
+        <li>
+          <Link to="/stopwords" className={isActive('/stopwords') ? 'active' : ''}>
+          <FaExclamationTriangle className="icon" /> Stopwords
           </Link>
         </li>
           <li className="divider" data-text="main">Reports & Feedback</li>

@@ -94,7 +94,7 @@ const App = () => {
     <div className="text-content">
       <div className={styles.mastheadSubheading}>Welcome to NUPals!</div>
       <div className={styles.mastheadHeading}>Discover Your Next Campus Connection</div>
-      <a className={`${styles.btnXl} btn btn-primary text-uppercase`} href="#">DOWNLOAD APK</a>
+      <a className={`${styles.btnXl} btn btn-primary text-uppercase`} href="https://drive.google.com/file/d/1ANbOaaggoTbOTKwLsaQWI_o-hJYqqkJo/view">DOWNLOAD APK</a>
     </div>
     
     {/* Image showcase */}

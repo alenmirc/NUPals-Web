@@ -7,73 +7,93 @@ const test = (req, res) => {
 };
 
   // REGISTER ENDPOINT DITO (NEW USER CREATE BY SUPERADMIN)
-  const registerUser = async (req, res) => {
-      try {
-        const { firstName, lastName, email, password, confirmPassword } = req.body;
-    
-        // CHECK IF FIRST NAME IS PROVIDED
-        if (!firstName) {
-          return res.json({ error: 'First Name is required' });
-        }
-    
-        // CHECK IF LAST NAME IS PROVIDED
-        if (!lastName) {
-          return res.json({ error: 'Last Name is required' });
-        }
-    
-        // CHECK IF PASSWORD IS VALID
-        if (!password || password.length < 6) {
-          return res.json({ error: 'Password is required and should be 6 characters long' });
-        }
-    
-        if (password !== confirmPassword) {
-          return res.json({ error: 'Passwords do not match' });
-      }
-        // CHECK IF EMAIL ALREADY EXISTS
-        const exist = await User.findOne({ email });
-        if (exist) {
-          await Log.create({
-            level: 'warn',
-            message: `Failed registration attempt - email already taken`,
-            adminId: null, // No user ID since the registration failed
-            adminName: email, // Log the email used for the registration attempt
-          });
-          return res.json({ error: 'Email is already taken' });
-        }
-    
-        // HASH PASSWORD
-        const hashedPassword = await hashPassword(password);
-    
-        // CREATE NEW USER IN DATABASE
-        const user = await User.create({
-          firstName,
-          lastName,
-          email,
-          password: hashedPassword,
-          role: 'admin', // Default role is 'admin'
-        });
-    
-        // LOG SUCCESSFUL REGISTRATION
-        await Log.create({
-          level: 'info',
-          message: `New admin account created by superadmin`,
-          adminId: user._id, // Log the newly created user's ID
-          adminName: email,  // Log the user's email
-        });
-    
-        return res.json(user);
-      } catch (error) {
-        // LOG SERVER ERROR
-        await Log.create({
-          level: 'error',
-          message: 'Internal server error during registration',
-          adminId: null, // No specific admin ID for system errors
-          adminName: 'unknown', // Log as 'unknown' since the error may not be tied to a specific user
-        });
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    };
+const registerUser = async (req, res) => {
+  try {
+    const { firstName, lastName, email, password, confirmPassword, username } = req.body;
+
+    // CHECK IF FIRST NAME IS PROVIDED
+    if (!firstName) {
+      return res.json({ error: 'First Name is required' });
+    }
+
+    // CHECK IF LAST NAME IS PROVIDED
+    if (!lastName) {
+      return res.json({ error: 'Last Name is required' });
+    }
+
+    // CHECK IF USERNAME IS PROVIDED
+    if (!username) {
+      return res.json({ error: 'Username is required' });
+    }
+
+    // CHECK IF PASSWORD IS VALID
+    if (!password || password.length < 6) {
+      return res.json({ error: 'Password is required and should be at least 6 characters long' });
+    }
+
+    if (password !== confirmPassword) {
+      return res.json({ error: 'Passwords do not match' });
+    }
+
+    // CHECK IF EMAIL ALREADY EXISTS
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+      await Log.create({
+        level: 'warn',
+        message: `Failed registration attempt - email already taken`,
+        adminId: null, // No user ID since the registration failed
+        adminName: email, // Log the email used for the registration attempt
+      });
+      return res.json({ error: 'Email is already taken' });
+    }
+
+    // CHECK IF USERNAME ALREADY EXISTS
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+      await Log.create({
+        level: 'warn',
+        message: `Failed registration attempt - username already taken`,
+        adminId: null, // No user ID since the registration failed
+        adminName: username, // Log the username used for the registration attempt
+      });
+      return res.json({ error: 'Username is already taken' });
+    }
+
+    // HASH PASSWORD
+    const hashedPassword = await hashPassword(password);
+
+    // CREATE NEW USER IN DATABASE
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      username, // Add username to the user object
+      password: hashedPassword,
+      role: 'admin', // Default role is 'admin'
+    });
+
+    // LOG SUCCESSFUL REGISTRATION
+    await Log.create({
+      level: 'info',
+      message: `New admin account created by superadmin`,
+      adminId: user._id, // Log the newly created user's ID
+      adminName: email,  // Log the user's email
+    });
+
+    return res.json(user);
+  } catch (error) {
+    // LOG SERVER ERROR
+    await Log.create({
+      level: 'error',
+      message: 'Internal server error during registration',
+      adminId: null, // No specific admin ID for system errors
+      adminName: 'unknown', // Log as 'unknown' since the error may not be tied to a specific user
+    });
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
     const createStudent = async (req, res) => {
       try {
