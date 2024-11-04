@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { test, registerUser, createStudent, loginUser, logoutUser, getProfile, updateProfile, getUserprofile} = require('../controllers/authController');
-const { createUserPosting, getPost, getPostbyid, deletePost, deleteComment, getPostWithComments } = require('../controllers/userPostingController');
+const { createUserPosting, getPost, getPostbyid, deletePost, deleteComment, getPostWithComments, getComments } = require('../controllers/userPostingController');
 const { getUsers, getAllpost, adminDeletepost, editPost, updateUser, createUser, deleteUser, updateSAdminpassword,  getLogs, getStudentLogs  } = require('../controllers/adminController');
 const { getMessages, deleteMessage, getUserIdByEmail, logLegalReason, fetchGroupMessages, fetchAllGroupChats, deleteGroupMessage } = require('../controllers/messageController');
 const { viewGroupChats, createGroupChat, updateGroupChat, deleteGroupChat } = require('../controllers/groupChatController');
@@ -46,6 +46,7 @@ router.get('/getpostbyid', getPostbyid);
 router.delete('/deletepost/:postId', authenticate, deletePost);
 router.delete('/deletecomment/:commentId', authenticate, deleteComment);
 router.get('/getpostwithcomments', getPostWithComments);
+router.get('/getcomments/:postId', getComments);
 
 //admin controller
 router.get('/getusers', getUsers);

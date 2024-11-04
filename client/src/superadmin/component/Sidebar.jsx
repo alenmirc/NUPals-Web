@@ -119,21 +119,7 @@ const Sidebar = () => {
             <FaPencilAlt className="icon" /> Post Management
           </Link>
         </li>
-        <li>
-          <Link to="/super/comments" className={isActive('/super/comments') ? 'active' : ''}>
-            <FaComments className="icon" /> Comment Management
-          </Link>
-        </li>
-        <li>
-          <Link to="/super/message" className={isActive('/super/message') ? 'active' : ''}>
-            <FaPaperPlane className="icon" /> Message Management
-          </Link>
-        </li>
-        <li>
-          <Link to="/super/groupmessage" className={isActive('/super/groupmessage') ? 'active' : ''}>
-            <FaUsers className="icon" /> Group Message
-          </Link>
-        </li>
+
         <li className="divider" data-text="main">Tools</li>
         <li>
           <Link to="/super/keywords" className={isActive('/super/keywords') ? 'active' : ''}>
@@ -179,3 +165,20 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+// TINANGGAL YUNG MSG AT GRPMSG
+//  <li>
+//  <Link to="/super/comments" className={isActive('/super/comments') ? 'active' : ''}>
+//    <FaComments className="icon" /> Comment Management
+//  </Link>
+//  </li>
+//  <li>
+//  <Link to="/super/message" className={isActive('/super/message') ? 'active' : ''}>
+//    <FaPaperPlane className="icon" /> Message Management
+//  </Link>
+//  </li>
+//  <li>
+//  <Link to="/super/groupmessage" className={isActive('/super/groupmessage') ? 'active' : ''}>
+//    <FaUsers className="icon" /> Group Message
+//  </Link>
+//  </li>

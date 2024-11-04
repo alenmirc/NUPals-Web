@@ -83,6 +83,26 @@ const deletePost = async (req, res) => {
   }
 };
 
+const getComments = async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+    // Populate only email for the userId in comments
+    const post = await Posts.findById(postId)
+      .populate('comments.userId', 'email');
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    res.json(post.comments); // Send back the comments array
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ message: 'Error fetching comments' });
+  }
+};
+
+
 
 
 // DELETE COMMENT
@@ -143,6 +163,7 @@ module.exports = {
     createUserPosting,
     getPost,
     getPostbyid,
+    getComments,
     deletePost,
     deleteComment,
     getPostWithComments

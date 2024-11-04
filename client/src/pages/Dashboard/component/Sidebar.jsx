@@ -114,11 +114,7 @@ const Sidebar = () => {
             <FaPencilAlt className="icon" /> Post Management
             </Link>
           </li>
-          <li>
-            <Link to="/comments" className={isActive('/comments') ? 'active' : ''}>
-            <FaComments className="icon" /> Comment Management
-            </Link>
-          </li>
+      
           <li className="divider" data-text="main">Tools</li>
         <li>
           <Link to="/keywords" className={isActive('/keywords') ? 'active' : ''}>
@@ -155,3 +151,10 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+// TINANGGAL YUNG COMMENTS
+// <li>
+// <Link to="/comments" className={isActive('/comments') ? 'active' : ''}>
+// <FaComments className="icon" /> Comment Management
+// </Link>
+// </li>

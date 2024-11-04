@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Modal, Table, Input, Button, Form, Spin } from 'antd';
+import { Modal, Table, Input, Button, Form, Spin, List } from 'antd';
 import axios from 'axios';
 import Navbar from './component/Navbar';
 import Sidebar from './component/Sidebar';
@@ -11,10 +11,13 @@ const { Search } = Input;
 
 const Post = () => {
   const [posts, setPosts] = useState([]);
+  const [comments, setComments] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false); // State for create modal
+  const [isCommentsModalVisible, setIsCommentsModalVisible] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState(null);
   const [confirmText, setConfirmText] = useState('');
   const [postToDelete, setPostToDelete] = useState(null);
   const [postToEdit, setPostToEdit] = useState(null);
@@ -38,9 +41,32 @@ const Post = () => {
     }
   };
 
+  const fetchComments = async (postId) => {
+    try {
+      const response = await axios.get(`/getcomments/${postId}`);
+      setComments(response.data);
+      setIsCommentsModalVisible(true);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      toast.error('Error fetching comments');
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await axios.delete(`/deletecomment/${commentId}`);
+      setComments(comments.filter((comment) => comment._id !== commentId));
+      toast.success('Comment deleted successfully');
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      toast.error('Failed to delete comment');
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
   }, []);
+
 
   const filteredPosts = posts.filter(post =>
     Object.values(post).some(value =>
@@ -234,6 +260,7 @@ const Post = () => {
       title: 'Action',
       render: (text, record) => (
         <div>
+          <Button type="primary" size="small" onClick={() => fetchComments(record._id)}>View</Button>
           <Button type="primary" size="small" onClick={() => showEditModal(record)}>Edit</Button>
           <Button type="danger" className="table-delete-button" size="small" onClick={() => showDeleteModal(record._id)}>Delete</Button>
         </div>
@@ -362,6 +389,30 @@ const Post = () => {
               </Form.Item>
             </Form>
           </Modal>
+
+            {/* Comments Modal */}
+            <Modal
+  title="Comments"
+  open={isCommentsModalVisible}
+  onCancel={() => setIsCommentsModalVisible(false)}
+  footer={null}
+>
+  <List
+    dataSource={comments}
+    renderItem={(comment) => (
+      <List.Item
+        actions={[
+          <Button type="link" danger onClick={() => handleDeleteComment(comment._id)}>Delete</Button>,
+        ]}
+      >
+        <List.Item.Meta
+          title={comment.userId?.email || 'Unknown User'}
+          description={comment.text} // Display the comment's text here
+        />
+      </List.Item>
+    )}
+  />
+</Modal>
         </main>
       </section>
     </div>
